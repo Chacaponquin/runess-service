@@ -7,5 +7,10 @@ import { User } from '../domain';
 export class UserRepository {
   constructor(private readonly mongoRepository: UserMongoRepository) {}
 
-  async create(dto: CreateUserDTO): Promise<User> {}
+  async create(dto: CreateUserDTO): Promise<User> {
+    const user = await this.mongoRepository.create(dto);
+    return user;
+  }
+
+  async findByEmail(email: string): Promise<User | null> {}
 }

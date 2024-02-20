@@ -1,3 +1,3 @@
-import { LoginUser } from './LoginUser';
+import { CreateUser } from './CreateUser';
 
-export { LoginUser };
+export { CreateUser };

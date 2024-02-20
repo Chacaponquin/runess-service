@@ -6,6 +6,7 @@ import { UserRepository } from './services/user-repository';
 import { MongooseModule } from '@nestjs/mongoose';
 import { DB_MOELS } from 'src/shared/constants';
 import { UserSchema } from './infrastructure/mongo/schema';
+import { CryptServices } from '@shared/services/crypt.service';
 
 @Module({
   imports: [
@@ -14,6 +15,6 @@ import { UserSchema } from './infrastructure/mongo/schema';
     ])
   ],
   controllers: [AuthController],
-  providers: [UserService, UserMongoRepository, UserRepository]
+  providers: [UserService, UserMongoRepository, UserRepository, CryptServices]
 })
 export class UserModule {}
