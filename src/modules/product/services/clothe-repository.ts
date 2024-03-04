@@ -1,12 +1,13 @@
 import { Injectable } from "@nestjs/common";
-import { ClotheMongoRepository } from "../infrastructure/mongo/core/clothe-mongo-repository";
-import { Clothe } from "../domain";
+import { IClothe } from "../infrastructure/mongo/schema";
+import { Model } from "mongoose";
+import { DB_MOELS } from "@shared/constants";
+import { InjectModel } from "@nestjs/mongoose";
 
 @Injectable()
 export class ClotheRepository {
-  constructor(private readonly mongoRepository: ClotheMongoRepository) {}
-
-  async all(): Promise<Array<Clothe>> {
-    return this.mongoRepository.all();
-  }
+  constructor(
+    @InjectModel(DB_MOELS.CLOTHE)
+    private readonly model: Model<IClothe>,
+  ) {}
 }

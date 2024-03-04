@@ -1,19 +1,25 @@
 import { Module } from "@nestjs/common";
 import { PaymentService } from "./services/payment-service";
-import { PaymentMongoRepository } from "./infrastructure/mongo/core/payment-mongo-repository";
 import { PaymentRepository } from "./services/payment-repository";
 import { DB_MOELS } from "@shared/constants";
 import { MongooseModule } from "@nestjs/mongoose";
-import { UserPaymentSchema } from "./infrastructure/mongo/schema";
+import {
+  ClientCardPaymentSchema,
+  ClientPaymentSchema,
+} from "./infrastructure/mongo/schema";
 
 @Module({
   controllers: [],
   exports: [PaymentService],
   imports: [
     MongooseModule.forFeatureAsync([
-      { name: DB_MOELS.USER_PAYMENT, useFactory: () => UserPaymentSchema },
+      { name: DB_MOELS.CLIENT_PAYMENT, useFactory: () => ClientPaymentSchema },
+      {
+        name: DB_MOELS.CARD_PAYMENT,
+        useFactory: () => ClientCardPaymentSchema,
+      },
     ]),
   ],
-  providers: [PaymentService, PaymentMongoRepository, PaymentRepository],
+  providers: [PaymentService, PaymentRepository],
 })
 export class PaymentModule {}

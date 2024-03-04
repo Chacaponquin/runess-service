@@ -5,7 +5,7 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { ProductModule } from "./modules/product/product.module";
 import { OrderModule } from "./modules/order/order.module";
 import { PaymentModule } from "./modules/payment/payment.module";
-import { MailModule } from "@modules/mail/mail.module";
+import { ClientModule } from "@modules/client/client.module";
 
 @Module({
   imports: [
@@ -15,7 +15,7 @@ import { MailModule } from "@modules/mail/mail.module";
     ProductModule,
     OrderModule,
     PaymentModule,
-    MailModule,
+    ClientModule,
   ],
   controllers: [],
   providers: [],

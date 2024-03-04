@@ -21,13 +21,13 @@ class Product {
   })
   provider: string;
 
-  @Prop({ required: true, type: mongoose.SchemaTypes.Decimal128 })
+  @Prop({ required: true, type: mongoose.SchemaTypes.Decimal128, min: 0 })
   original_price: number;
 
-  @Prop({ required: true, type: mongoose.SchemaTypes.Decimal128 })
+  @Prop({ required: true, type: mongoose.SchemaTypes.Decimal128, min: 0 })
   price: number;
 
-  @Prop({ default: [] })
+  @Prop({ default: [], type: mongoose.SchemaTypes.Array })
   images: Array<string>;
 
   @Prop({ required: true, type: mongoose.SchemaTypes.String, default: "" })
@@ -35,6 +35,9 @@ class Product {
 
   @Prop({ required: true, type: mongoose.SchemaTypes.Number, default: null })
   quantity: number | null;
+
+  @Prop({ default: 0, min: 0, type: mongoose.SchemaTypes.Number })
+  views: number;
 }
 
 @Schema({

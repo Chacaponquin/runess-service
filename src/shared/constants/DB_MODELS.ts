@@ -2,6 +2,8 @@ export enum DB_MOELS {
   USERS = "users",
   PRODUCTS = "products",
   ORDER = "order",
-  USER_PAYMENT = "user_payment",
+  CLIENT_PAYMENT = "client_payment",
   CLOTHE = "clothe",
+  CLIENT = "client",
+  CARD_PAYMENT = "card_payment",
 }
