@@ -1,4 +1,5 @@
 import { AddProductToFavorites } from "./AddProductToFavorites";
+import { CreateContactMessage } from "./CreateContactMessage";
 import { CreateUser } from "./CreateUser";
 import { DeleteProductFromFavorites } from "./DeleteProductFromFavorites";
 import { GetUserFavorites } from "./GetUserFavorites";
@@ -10,4 +11,5 @@ export {
   AddProductToFavorites,
   GetUserFavorites,
   DeleteProductFromFavorites,
+  CreateContactMessage,
 };

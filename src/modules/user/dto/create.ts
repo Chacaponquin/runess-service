@@ -4,3 +4,9 @@ export interface CreateUserDTO {
   password: string;
   email: string;
 }
+
+export interface CreateContactMessageDTO {
+  email: "";
+  fullName: "";
+  message: "";
+}

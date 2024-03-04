@@ -14,4 +14,8 @@ export const ROUTES = {
     ROOT: "order",
     CREATE: "create",
   },
+  USER: {
+    ROOT: "user",
+    CONTACT: "contact",
+  },
 } as const;
