@@ -5,3 +5,7 @@ export interface SendUserDTO {
   email: string;
   favorites: Array<string>;
 }
+
+export interface SendUserOrderDTO {
+  amount: number;
+}

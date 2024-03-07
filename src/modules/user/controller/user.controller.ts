@@ -1,7 +1,7 @@
 import { ROUTES } from "@modules/app/constants";
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, Get, Post } from "@nestjs/common";
 import { CreateContactMessageDTO } from "../dto/create";
-import { CreateContactMessage } from "../use-cases";
+import { CreateContactMessage, GetUserOrders } from "../use-cases";
 
 @Controller(ROUTES.USER.ROOT)
 export class UserController {
@@ -9,5 +9,12 @@ export class UserController {
   async contact(@Body() dto: CreateContactMessageDTO) {
     const useCase = new CreateContactMessage();
     await useCase.execute(dto);
+  }
+
+  @Get(ROUTES.USER.ORDERS)
+  async orders() {
+    const useCase = new GetUserOrders();
+    const orders = await useCase.execute();
+    return orders;
   }
 }

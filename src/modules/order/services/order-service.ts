@@ -10,4 +10,8 @@ export class OrderService {
   createOrder(dto: SaveOrderProps): Promise<Order> {
     return this.orderRepository.create(dto);
   }
+
+  ordersByUser(userId: string): Promise<Array<Order>> {
+    return this.orderRepository.ordersByUser(userId);
+  }
 }

@@ -22,7 +22,7 @@ export class Order {
     required: true,
     ref: DB_MOELS.CLIENT_PAYMENT,
   })
-  userPayment: IClientPayment;
+  clientPayment: IClientPayment;
 
   @Prop({ type: mongoose.SchemaTypes.Array, required: true })
   orders: Array<OrderItem>;

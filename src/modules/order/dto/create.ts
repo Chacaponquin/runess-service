@@ -1,3 +1,5 @@
+import { PAYMENT_TYPE } from "@modules/payment/constants";
+
 export interface CreateOrderDTO {
   firstName: string;
   lastName: string;
@@ -7,6 +9,7 @@ export interface CreateOrderDTO {
   note: string;
   orders: Array<OrderItemDTO>;
   userId: string | null;
+  type: PAYMENT_TYPE;
 }
 
 export interface OrderItemDTO {
@@ -15,6 +18,6 @@ export interface OrderItemDTO {
 }
 
 export interface SaveOrderProps {
-  userPaymentId: string;
+  clientPaymentId: string;
   orders: Array<{ productId: string; quantity: number }>;
 }

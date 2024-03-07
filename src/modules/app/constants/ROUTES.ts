@@ -17,5 +17,6 @@ export const ROUTES = {
   USER: {
     ROOT: "user",
     CONTACT: "contact",
+    ORDERS: "orders",
   },
 } as const;

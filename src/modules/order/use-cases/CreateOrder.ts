@@ -24,7 +24,7 @@ export class CreateOrder {
 
     await this.orderServices.createOrder({
       orders: dto.orders,
-      userPaymentId: cardPayment.id,
+      clientPaymentId: cardPayment.id,
     });
 
     return "";

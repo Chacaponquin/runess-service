@@ -38,6 +38,9 @@ class Product {
 
   @Prop({ default: 0, min: 0, type: mongoose.SchemaTypes.Number })
   views: number;
+
+  @Prop({ type: mongoose.SchemaTypes.Array, default: [] })
+  tags: Array<string>;
 }
 
 @Schema({

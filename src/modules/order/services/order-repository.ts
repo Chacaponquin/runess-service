@@ -6,7 +6,7 @@ import { IOrder } from "../infrastructure/mongo/schema";
 import { SaveOrderProps } from "../dto/create";
 import { Order } from "../domain";
 
-@Injectable()
+@Injectable({})
 export class OrderRepository {
   constructor(
     @InjectModel(DB_MOELS.ORDER)
@@ -15,13 +15,18 @@ export class OrderRepository {
 
   async create(props: SaveOrderProps): Promise<Order> {
     const order = new this.model({
-      userPayment: props.userPaymentId,
+      clientPayment: props.clientPaymentId,
       orders: props.orders,
     });
 
     await order.save();
 
     return this.map(order);
+  }
+
+  async ordersByUser(userId: string): Promise<Array<Order>> {
+    const result = await this.model.find().populate("clientPayment");
+    return result.map((r) => this.map(r));
   }
 
   private map(order: IOrder): Order {
