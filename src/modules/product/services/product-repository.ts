@@ -31,6 +31,8 @@ export class ProductRepository {
       id: product.id,
       name: product.name,
       price: product.price,
+      images: product.images,
+      provider: product.provider,
     });
   }
 }

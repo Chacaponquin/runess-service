@@ -9,6 +9,7 @@ export const ROUTES = {
     NEW_PRODUCTS: "new-products",
     TRENDING_PRODUCTS: "trending-products",
     TOP_FAVORITE_PRODUCTS: "top-favorite-products",
+    FIND_BY_ID: "find/:id",
   },
   ORDER: {
     ROOT: "order",
