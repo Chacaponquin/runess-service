@@ -9,6 +9,7 @@ import {
 import { FilesInterceptor } from "@nestjs/platform-express";
 import { ClotheServices } from "../services/clothe.services";
 import { CreateClotheDTO } from "../dto/clothe";
+import { CreateClothe, UploadClotheImage } from "../use-cases";
 
 @Controller(ROUTES.CLOTHE.ROOT)
 export class ClotheController {
@@ -16,12 +17,17 @@ export class ClotheController {
 
   @Post(ROUTES.CLOTHE.UPLOAD_IMAGES)
   @UseInterceptors(FilesInterceptor("image"))
-  upload(@UploadedFiles() images: Array<Express.Multer.File>) {
-    console.log(images);
+  async upload(
+    @UploadedFiles() images: Array<Express.Multer.File>,
+  ): Promise<Array<string>> {
+    const useCase = new UploadClotheImage(this.clotheServices);
+    const allUrls = await useCase.execute(images);
+    return allUrls;
   }
 
   @Post(ROUTES.CLOTHE.CREATE)
   create(@Body() dto: CreateClotheDTO) {
-    console.log(dto);
+    const useCase = new CreateClothe(this.clotheServices);
+    useCase.execute(dto);
   }
 }

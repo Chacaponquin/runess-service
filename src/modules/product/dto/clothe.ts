@@ -33,6 +33,12 @@ export class CreateClotheDTO {
   @MinLength(1)
   colors: Array<string>;
 
+  @IsArray()
+  @IsNotEmpty()
+  @IsString({ each: true })
+  @MinLength(1)
+  images: Array<string>;
+
   @IsNotEmpty()
   @IsString()
   category: string;
