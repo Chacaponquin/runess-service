@@ -11,6 +11,11 @@ export const ROUTES = {
     TOP_FAVORITE_PRODUCTS: "top-favorite-products",
     FIND_BY_ID: "find/:id",
   },
+  CLOTHE: {
+    ROOT: "clothe",
+    CREATE: "create",
+    UPLOAD_IMAGES: "upload-images",
+  },
   ORDER: {
     ROOT: "order",
     CREATE: "create",

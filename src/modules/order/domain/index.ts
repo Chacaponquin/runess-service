@@ -10,9 +10,9 @@ export interface OrderItem {
 }
 
 export class Order {
-  id: string;
-  orders: Array<OrderItem>;
-  note: string;
+  readonly id: string;
+  readonly orders: Array<OrderItem>;
+  readonly note: string;
 
   constructor({ id, note, orders }: Props) {
     this.orders = orders;
