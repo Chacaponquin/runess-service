@@ -22,7 +22,7 @@ class Product {
   provider: string;
 
   @Prop({ required: true, type: mongoose.SchemaTypes.Decimal128, min: 0 })
-  original_price: number;
+  originalPrice: number;
 
   @Prop({ required: true, type: mongoose.SchemaTypes.Decimal128, min: 0 })
   price: number;
@@ -33,7 +33,7 @@ class Product {
   @Prop({ required: true, type: mongoose.SchemaTypes.String, default: "" })
   description: string;
 
-  @Prop({ required: true, type: mongoose.SchemaTypes.Number, default: null })
+  @Prop({ required: false, type: mongoose.SchemaTypes.Number, default: null })
   quantity: number | null;
 
   @Prop({ default: 0, min: 0, type: mongoose.SchemaTypes.Number })

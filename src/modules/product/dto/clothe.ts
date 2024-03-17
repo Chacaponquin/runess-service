@@ -1,10 +1,10 @@
 import {
+  ArrayMinSize,
   IsArray,
   IsNotEmpty,
   IsNumber,
   IsString,
   Min,
-  MinLength,
 } from "class-validator";
 
 export class CreateClotheDTO {
@@ -14,7 +14,7 @@ export class CreateClotheDTO {
 
   @IsNotEmpty()
   @IsNumber()
-  @Min(1)
+  @Min(0)
   price: number;
 
   @IsNotEmpty()
@@ -24,19 +24,19 @@ export class CreateClotheDTO {
   @IsArray()
   @IsNotEmpty()
   @IsString({ each: true })
-  @MinLength(1)
+  @ArrayMinSize(1)
   sizes: Array<string>;
 
   @IsArray()
   @IsNotEmpty()
   @IsString({ each: true })
-  @MinLength(1)
+  @ArrayMinSize(1)
   colors: Array<string>;
 
   @IsArray()
   @IsNotEmpty()
   @IsString({ each: true })
-  @MinLength(1)
+  @ArrayMinSize(1)
   images: Array<string>;
 
   @IsNotEmpty()

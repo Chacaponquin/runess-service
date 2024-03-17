@@ -8,6 +8,8 @@ import * as AWS from "aws-sdk";
 import * as fs from "fs";
 import { schemas } from "chaca";
 import { UploadProductImageException } from "../exceptions";
+import { Clothe } from "../domain";
+import { CreateClotheProps } from "../interfaces/clothe";
 
 @Injectable()
 export class ClotheRepository {
@@ -40,6 +42,8 @@ export class ClotheRepository {
 
       await this.client.upload(params).promise();
 
+      fs.unlinkSync(image.path);
+
       const url = this.client.getSignedUrl("getObject", {
         Key: key,
         Bucket: this.envServices.AWS_S3_BUCKET,
@@ -50,5 +54,27 @@ export class ClotheRepository {
       console.log(error);
       throw new UploadProductImageException();
     }
+  }
+
+  async create(dto: CreateClotheProps): Promise<Clothe> {
+    const newClothe = new this.model({
+      product: dto.productId,
+      sizes: dto.sizes,
+      colors: dto.colors,
+    });
+
+    await newClothe.save();
+
+    return this.map(newClothe);
+  }
+
+  private map(clothe: IClothe): Clothe {
+    return new Clothe({
+      id: clothe.id,
+      images: clothe.product.images,
+      name: clothe.product.name,
+      price: clothe.product.price,
+      provider: clothe.product.provider,
+    });
   }
 }

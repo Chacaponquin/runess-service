@@ -4,6 +4,7 @@ import { DB_MOELS } from "@shared/constants";
 import { Model } from "mongoose";
 import { IProduct } from "../infrastructure/mongo/schema";
 import { Product } from "../domain";
+import { CreateProductProps } from "../interfaces/product";
 
 @Injectable()
 export class ProductRepository {
@@ -24,6 +25,23 @@ export class ProductRepository {
     } catch (error) {
       return null;
     }
+  }
+
+  async deleteOne(id: string) {
+    await this.model.findByIdAndDelete(id);
+  }
+
+  async create(props: CreateProductProps): Promise<Product> {
+    const newProduct = new this.model({
+      name: props.name,
+      provider: props.provider,
+      originalPrice: props.originalPrice,
+      price: props.price,
+    });
+
+    await newProduct.save();
+
+    return this.map(newProduct);
   }
 
   private map(product: IProduct): Product {
