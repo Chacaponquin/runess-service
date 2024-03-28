@@ -1,5 +1,5 @@
-import { SendProductDTO } from "../dto/send";
-import { ProductServices } from "../services/product.services";
+import { SendProductDTO } from "../../dto/send";
+import { ProductServices } from "../../services/product.services";
 
 export class FindProductById {
   constructor(private readonly productServices: ProductServices) {}

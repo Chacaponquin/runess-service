@@ -14,6 +14,14 @@ export const ROUTES = {
   CLOTHE: {
     ROOT: "clothe",
     CREATE: "create",
+    UPDATE: "update/:id",
+    REMOVE: "remove/:id",
+  },
+  MEDICINE: {
+    ROOT: "medicine",
+    CREATE: "create",
+    UPDATE: "update/:id",
+    REMOVE: "remove/:id",
   },
   ORDER: {
     ROOT: "order",

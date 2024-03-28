@@ -6,3 +6,5 @@ export interface CreateProductProps {
   images: Array<string>;
   category: string;
 }
+
+export type UpdateProductProps = CreateProductProps & { id: string };

@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
-import { ProductRepository } from "./product-repository";
+import { ProductRepository } from "./product.repository";
 import { Product } from "../domain";
-import { CreateProductProps } from "../interfaces/product";
+import { CreateProductProps, UpdateProductProps } from "../interfaces/product";
 
 @Injectable()
 export class ProductServices {
@@ -11,11 +11,15 @@ export class ProductServices {
     return this.repository.findById(id);
   }
 
-  createProduct(dto: CreateProductProps) {
-    return this.repository.create(dto);
+  createProduct(props: CreateProductProps) {
+    return this.repository.create(props);
   }
 
   deleteOne(id: string) {
     return this.repository.deleteOne(id);
+  }
+
+  update(props: UpdateProductProps) {
+    return this.repository.update(props);
   }
 }

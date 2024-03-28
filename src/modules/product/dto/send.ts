@@ -1,8 +1,10 @@
+import { ProductImage } from "../domain";
+
 export interface SendProductDTO {
   id: string;
   name: string;
   price: number;
-  images: Array<string>;
+  images: Array<ProductImage>;
   provider: string;
 }
 

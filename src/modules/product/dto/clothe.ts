@@ -1,26 +1,7 @@
-import {
-  ArrayMinSize,
-  IsArray,
-  IsNotEmpty,
-  IsNumber,
-  IsString,
-  Min,
-} from "class-validator";
+import { ArrayMinSize, IsArray, IsNotEmpty, IsString } from "class-validator";
+import { ProductFieldsDTO } from "./product";
 
-export class CreateClotheDTO {
-  @IsNotEmpty()
-  @IsString()
-  name: string;
-
-  @IsNotEmpty()
-  @IsNumber()
-  @Min(0)
-  price: number;
-
-  @IsNotEmpty()
-  @IsString()
-  provider: string;
-
+export class CreateClotheDTO extends ProductFieldsDTO {
   @IsArray()
   @IsNotEmpty()
   @IsString({ each: true })
@@ -32,14 +13,6 @@ export class CreateClotheDTO {
   @IsString({ each: true })
   @ArrayMinSize(1)
   colors: Array<string>;
-
-  @IsArray()
-  @IsNotEmpty()
-  @IsString({ each: true })
-  @ArrayMinSize(1)
-  images: Array<string>;
-
-  @IsNotEmpty()
-  @IsString()
-  category: string;
 }
+
+export class UpdateClotheDTO extends CreateClotheDTO {}

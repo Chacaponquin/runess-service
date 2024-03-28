@@ -7,8 +7,14 @@ export class UploadImages {
     const all = [] as Array<string>;
 
     for (const image of images) {
-      const url = await this.mediaServices.uploadImage(image);
-      all.push(url);
+      const key = await this.mediaServices.uploadImage(image);
+      const newImage = await this.mediaServices.createImage({
+        key: key,
+        name: image.filename,
+        size: image.size,
+      });
+
+      all.push(newImage.id);
     }
 
     return all;

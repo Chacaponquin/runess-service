@@ -4,13 +4,15 @@ import { DB_MOELS } from "@shared/constants";
 import { Model } from "mongoose";
 import { IProduct } from "../infrastructure/mongo/schema";
 import { Product } from "../domain";
-import { CreateProductProps } from "../interfaces/product";
+import { CreateProductProps, UpdateProductProps } from "../interfaces/product";
+import { MediaServices } from "@modules/media/services/media.service";
 
 @Injectable()
 export class ProductRepository {
   constructor(
     @InjectModel(DB_MOELS.PRODUCTS)
     private readonly model: Model<IProduct>,
+    private readonly mediaServices: MediaServices,
   ) {}
 
   async findById(id: string): Promise<Product | null> {
@@ -46,12 +48,28 @@ export class ProductRepository {
     return this.map(newProduct);
   }
 
+  async update(props: UpdateProductProps) {
+    await this.model.findByIdAndUpdate(props.id, {
+      name: props.name,
+      provider: props.provider,
+      originalPrice: props.originalPrice,
+      price: props.price,
+      category: props.category,
+      images: props.images,
+    });
+  }
+
   private map(product: IProduct): Product {
     return new Product({
       id: product.id,
       name: product.name,
       price: product.price,
-      images: product.images,
+      images: product.images.map((i) => ({
+        name: i.name,
+        size: i.size,
+        source: this.mediaServices.getImageUrl(i.aws_key),
+        id: i.id,
+      })),
       provider: product.provider,
     });
   }

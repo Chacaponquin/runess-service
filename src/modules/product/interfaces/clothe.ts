@@ -3,3 +3,7 @@ export interface CreateClotheProps {
   colors: Array<string>;
   sizes: Array<string>;
 }
+
+export type UpdateClotheProps = Omit<CreateClotheProps, "productId"> & {
+  id: string;
+};

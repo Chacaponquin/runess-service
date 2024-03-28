@@ -4,6 +4,12 @@ import * as AWS from "aws-sdk";
 import { schemas } from "chaca";
 import * as fs from "fs";
 import { UploadImageException } from "../exceptions";
+import { CreateImageProps } from "../interfaces/image";
+import { Image } from "../domain";
+import { InjectModel } from "@nestjs/mongoose";
+import { DB_MOELS } from "@shared/constants";
+import { Model } from "mongoose";
+import { IImage } from "../infrastructure/mongo/schemas";
 
 @Injectable()
 export class MediaRepository {
@@ -15,11 +21,35 @@ export class MediaRepository {
     region: this.envServices.AWS_S3_REGION,
   });
 
-  constructor(private readonly envServices: EnvService) {}
+  constructor(
+    private readonly envServices: EnvService,
+    @InjectModel(DB_MOELS.IMAGES)
+    private readonly imageModel: Model<IImage>,
+  ) {}
+
+  map(image: IImage): Image {
+    return new Image({
+      id: image.id,
+      key: image.aws_key,
+      name: image.name,
+      size: image.size,
+    });
+  }
+
+  async createImage(props: CreateImageProps): Promise<Image> {
+    const newImage = new this.imageModel({
+      name: props.name,
+      size: props.size,
+      aws_key: props.key,
+    });
+
+    await newImage.save();
+
+    return this.map(newImage);
+  }
 
   async uploadImage(image: Express.Multer.File): Promise<string> {
     const key = schemas.id.uuid().getValue();
-
     const file = fs.readFileSync(image.path);
 
     try {
@@ -34,14 +64,18 @@ export class MediaRepository {
 
       fs.unlinkSync(image.path);
 
-      const url = this.client.getSignedUrl("getObject", {
-        Key: key,
-        Bucket: this.envServices.AWS_S3_BUCKET,
-      });
-
-      return url;
+      return key;
     } catch (error) {
       throw new UploadImageException();
     }
+  }
+
+  getImageUrl(key: string): string {
+    const url = this.client.getSignedUrl("getObject", {
+      Key: key,
+      Bucket: this.envServices.AWS_S3_BUCKET,
+    });
+
+    return url;
   }
 }

@@ -1,41 +1,37 @@
 import { Injectable } from "@nestjs/common";
-import { ClotheRepository } from "./clothe.repository";
-import { CreateClotheDTO, UpdateClotheDTO } from "../dto/clothe";
 import { Clothe } from "../domain";
 import { ProductServices } from "./product.services";
+import { MedicineRepository } from "./medicine.repository";
+import { CreateMedicineDTO, UpdateMedicineDTO } from "../dto/medicine";
 
 @Injectable()
-export class ClotheServices {
+export class MedicineServices {
   constructor(
-    private readonly clotheRepository: ClotheRepository,
+    private readonly repository: MedicineRepository,
     private readonly productServices: ProductServices,
   ) {}
 
   async delete(id: string): Promise<void> {
-    const clothe = await this.clotheRepository.remove(id);
+    const clothe = await this.repository.remove(id);
 
     if (clothe) {
       await this.productServices.deleteOne(clothe.productId);
     }
   }
 
-  async update(id: string, props: UpdateClotheDTO) {
-    const clothe = await this.clotheRepository.update({
-      id: id,
-      colors: props.colors,
-      sizes: props.sizes,
-    });
+  async update(id: string, dto: UpdateMedicineDTO) {
+    const found = await this.productServices.findById(id);
 
-    if (clothe) {
+    if (found) {
       await this.productServices.update({
-        ...props,
-        originalPrice: props.price,
-        id: clothe.productId,
+        ...dto,
+        originalPrice: dto.price,
+        id: found.id,
       });
     }
   }
 
-  async createClothe(dto: CreateClotheDTO): Promise<Clothe> {
+  async createMedicine(dto: CreateMedicineDTO): Promise<Clothe> {
     const product = await this.productServices.createProduct({
       images: dto.images,
       name: dto.name,
@@ -46,10 +42,8 @@ export class ClotheServices {
     });
 
     try {
-      const clothe = await this.clotheRepository.create({
+      const clothe = await this.repository.create({
         productId: product.id,
-        colors: dto.colors,
-        sizes: dto.sizes,
       });
 
       return clothe;
