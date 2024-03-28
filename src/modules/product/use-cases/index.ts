@@ -3,8 +3,6 @@ import { GetNewProducts } from "./GetNewProducts";
 import { GetTopFavoriteProducts } from "./GetTopFavoriteProducts";
 import { GetTrendingProducts } from "./GetTrendingProducts";
 import { CreateClothe } from "./clothe/CreateClothe";
-import { UploadClotheImage } from "./clothe/UploadClotheImage";
-
 
 export {
   GetNewProducts,
@@ -12,5 +10,4 @@ export {
   GetTrendingProducts,
   FindProductById,
   CreateClothe,
-  UploadClotheImage
 };

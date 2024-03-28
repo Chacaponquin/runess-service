@@ -4,4 +4,5 @@ export interface CreateProductProps {
   originalPrice: number;
   price: number;
   images: Array<string>;
+  category: string;
 }

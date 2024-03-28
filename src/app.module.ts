@@ -6,6 +6,7 @@ import { ProductModule } from "./modules/product/product.module";
 import { OrderModule } from "./modules/order/order.module";
 import { PaymentModule } from "./modules/payment/payment.module";
 import { ClientModule } from "@modules/client/client.module";
+import { MediaModule } from "@modules/media/media.module";
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ClientModule } from "@modules/client/client.module";
     OrderModule,
     PaymentModule,
     ClientModule,
+    MediaModule,
   ],
   controllers: [],
   providers: [],

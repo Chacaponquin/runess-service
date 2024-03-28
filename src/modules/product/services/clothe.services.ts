@@ -18,6 +18,7 @@ export class ClotheServices {
       originalPrice: dto.price,
       price: dto.price,
       provider: dto.provider,
+      category: dto.category,
     });
 
     try {
@@ -32,9 +33,5 @@ export class ClotheServices {
       this.productServices.deleteOne(product.id);
       throw error;
     }
-  }
-
-  uploadImage(image: Express.Multer.File) {
-    return this.clotheRepository.uploadImage(image);
   }
 }

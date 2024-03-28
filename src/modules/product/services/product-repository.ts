@@ -37,6 +37,8 @@ export class ProductRepository {
       provider: props.provider,
       originalPrice: props.originalPrice,
       price: props.price,
+      category: props.category,
+      images: props.images,
     });
 
     await newProduct.save();

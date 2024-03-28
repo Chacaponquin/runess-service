@@ -14,11 +14,14 @@ export const ROUTES = {
   CLOTHE: {
     ROOT: "clothe",
     CREATE: "create",
-    UPLOAD_IMAGES: "upload-images",
   },
   ORDER: {
     ROOT: "order",
     CREATE: "create",
+  },
+  MEDIA: {
+    ROOT: "media",
+    UPLOAD_IMAGES: "upload-images",
   },
   USER: {
     ROOT: "user",

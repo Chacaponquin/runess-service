@@ -27,10 +27,10 @@ class Product {
   @Prop({ required: true, type: mongoose.SchemaTypes.Decimal128, min: 0 })
   price: number;
 
-  @Prop({ default: [], type: mongoose.SchemaTypes.Array })
+  @Prop({ required: true, type: mongoose.SchemaTypes.Array })
   images: Array<string>;
 
-  @Prop({ required: true, type: mongoose.SchemaTypes.String, default: "" })
+  @Prop({ required: false, type: mongoose.SchemaTypes.String, default: "" })
   description: string;
 
   @Prop({ required: false, type: mongoose.SchemaTypes.Number, default: null })
@@ -41,6 +41,9 @@ class Product {
 
   @Prop({ type: mongoose.SchemaTypes.Array, default: [] })
   tags: Array<string>;
+
+  @Prop({ type: mongoose.SchemaTypes.String, required: true })
+  category: string;
 }
 
 @Schema({
