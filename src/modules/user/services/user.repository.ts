@@ -24,15 +24,15 @@ export class UserRepository {
 
     await user.save();
 
-    return this._map(user);
+    return this.map(user);
   }
 
   async findByEmail(email: string): Promise<User | null> {
     const result = await this.model.findOne({ email: email });
-    return result ? this._map(result) : null;
+    return result ? this.map(result) : null;
   }
 
-  private _map(user: IUser): User {
+  private map(user: IUser): User {
     return new User({ id: user.id, password: user.password });
   }
 }

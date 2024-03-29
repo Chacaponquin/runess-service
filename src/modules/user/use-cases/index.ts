@@ -1,10 +1,11 @@
-import { AddProductToFavorites } from "./AddProductToFavorites";
-import { CreateContactMessage } from "./CreateContactMessage";
-import { CreateUser } from "./CreateUser";
-import { DeleteProductFromFavorites } from "./DeleteProductFromFavorites";
-import { GetUserFavorites } from "./GetUserFavorites";
-import { GetUserOrders } from "./GetUserOrders";
-import { LoginUser } from "./LoginUser";
+import { AddProductToFavorites } from "./user/AddProductToFavorites";
+import { CreateContactMessage } from "./user/CreateContactMessage";
+import { CreateUser } from "./auth/CreateUser";
+import { DeleteProductFromFavorites } from "./user/DeleteProductFromFavorites";
+import { GetUserFavorites } from "./user/GetUserFavorites";
+import { GetUserOrders } from "./user/GetUserOrders";
+import { LoginUser } from "./auth/LoginUser";
+import { SignInAdmin } from "./admin/SignInAdmin";
 
 export {
   CreateUser,
@@ -14,4 +15,5 @@ export {
   DeleteProductFromFavorites,
   CreateContactMessage,
   GetUserOrders,
+  SignInAdmin,
 };

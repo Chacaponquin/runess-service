@@ -1,22 +1,35 @@
-interface Props {
+interface UserProps {
   id: string;
   password: string;
 }
 
+interface AdminUserProps {
+  id: string;
+  password: string;
+  username: string;
+  email: string;
+}
+
 export class User {
-  private _id: string;
-  private _password: string;
+  readonly id: string;
+  readonly password: string;
 
-  constructor({ id, password }: Props) {
-    this._id = id;
-    this._password = password;
+  constructor({ id, password }: UserProps) {
+    this.id = id;
+    this.password = password;
   }
+}
 
-  get id() {
-    return this._id;
-  }
+export class AdminUser {
+  readonly id: string;
+  readonly password: string;
+  readonly username: string;
+  readonly email: string;
 
-  get password() {
-    return this._password;
+  constructor({ email, id, password, username }: AdminUserProps) {
+    this.email = email;
+    this.id = id;
+    this.password = password;
+    this.username = username;
   }
 }

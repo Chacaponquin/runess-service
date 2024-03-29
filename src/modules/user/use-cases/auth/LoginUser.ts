@@ -1,12 +1,12 @@
-import { CryptServices } from '@shared/services/crypt.service';
-import { LoginUserDTO } from '../dto/login';
-import { UserService } from '../services/user.service';
-import { LoginUserError } from '../exceptions';
+import { CryptServices } from "@shared/services/crypt.service";
+import { LoginUserDTO } from "../../dto/login";
+import { UserService } from "../../services/user.service";
+import { LoginUserError } from "../../exceptions";
 
 export class LoginUser {
   constructor(
     private readonly userServices: UserService,
-    private readonly cryptServices: CryptServices
+    private readonly cryptServices: CryptServices,
   ) {}
 
   async execute(dto: LoginUserDTO): Promise<string> {
@@ -15,7 +15,7 @@ export class LoginUser {
     if (found) {
       const equal = await this.cryptServices.compare(
         found.password,
-        dto.password
+        dto.password,
       );
 
       if (equal) {

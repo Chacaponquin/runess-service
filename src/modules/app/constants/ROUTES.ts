@@ -36,4 +36,8 @@ export const ROUTES = {
     CONTACT: "contact",
     ORDERS: "orders",
   },
+  ADMIN_USER: {
+    ROOT: "admin",
+    SIGN_IN: "sign-in",
+  },
 } as const;

@@ -2,15 +2,13 @@ import mongoose, { Document } from "mongoose";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { UserEmail } from "@modules/user/value-object";
 
-export type IUser = User & Document;
-
 @Schema({
   timestamps: true,
   autoCreate: true,
   toJSON: { virtuals: true },
   toObject: { virtuals: true },
 })
-export class User {
+class User {
   @Prop({
     required: true,
     type: mongoose.SchemaTypes.String,
@@ -24,11 +22,10 @@ export class User {
   lastName: string;
 
   @Prop({
-    default: null,
     unique: true,
     type: mongoose.SchemaTypes.String,
     validate: {
-      validator: (value: string) => {
+      validator(value: string) {
         return UserEmail.emailRegex.test(value);
       },
     },
@@ -37,17 +34,46 @@ export class User {
   email: string;
 
   @Prop({ type: mongoose.SchemaTypes.String, required: true })
-  password: string | null;
+  password: string;
 
   @Prop({ type: mongoose.SchemaTypes.String, default: null })
   image: string | null;
 
   @Prop({ type: mongoose.SchemaTypes.String, default: null })
-  phone: string;
+  phone: string | null;
 
   @Prop({ type: mongoose.SchemaTypes.String, default: null })
-  country: string;
+  country: string | null;
 }
-const UserSchema = SchemaFactory.createForClass(User);
 
-export { UserSchema };
+@Schema({
+  timestamps: true,
+  autoCreate: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true },
+})
+class AdminUser {
+  @Prop({
+    unique: true,
+    type: mongoose.SchemaTypes.String,
+    validate: {
+      validator(value: string) {
+        return UserEmail.emailRegex.test(value);
+      },
+    },
+    required: true,
+  })
+  email: string;
+
+  @Prop({ type: mongoose.SchemaTypes.String, required: true, unique: true })
+  username: string;
+
+  @Prop({ type: mongoose.SchemaTypes.String, required: true })
+  password: string;
+}
+
+export const UserSchema = SchemaFactory.createForClass(User);
+export const AdminUserSchema = SchemaFactory.createForClass(AdminUser);
+
+export type IUser = User & Document;
+export type IAdmin = AdminUser & Document;

@@ -3,7 +3,7 @@ import { Injectable } from "@nestjs/common";
 import * as AWS from "aws-sdk";
 import { schemas } from "chaca";
 import * as fs from "fs";
-import { UploadImageException } from "../exceptions";
+import { DeleteImageException, UploadImageException } from "../exceptions";
 import { CreateImageProps } from "../interfaces/image";
 import { Image } from "../domain";
 import { InjectModel } from "@nestjs/mongoose";
@@ -46,6 +46,21 @@ export class MediaRepository {
     await newImage.save();
 
     return this.map(newImage);
+  }
+
+  async delete(id: string): Promise<void> {
+    try {
+      const element = await this.imageModel.findByIdAndDelete(id);
+
+      await this.client
+        .deleteObject({
+          Bucket: this.envServices.AWS_S3_BUCKET,
+          Key: element.aws_key,
+        })
+        .promise();
+    } catch (error) {
+      throw new DeleteImageException();
+    }
   }
 
   async uploadImage(image: Express.Multer.File): Promise<string> {

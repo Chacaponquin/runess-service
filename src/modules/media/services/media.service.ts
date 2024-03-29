@@ -14,6 +14,10 @@ export class MediaServices {
     return this.mediaRepository.createImage(props);
   }
 
+  async deleteImage(id: string): Promise<void> {
+    await this.mediaRepository.delete(id);
+  }
+
   getImageUrl(key: string): string {
     return this.mediaRepository.getImageUrl(key);
   }

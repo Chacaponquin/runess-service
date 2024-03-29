@@ -29,8 +29,9 @@ export class ProductRepository {
     }
   }
 
-  async deleteOne(id: string) {
-    await this.model.findByIdAndDelete(id);
+  async deleteOne(id: string): Promise<Product | null> {
+    const found = await this.model.findByIdAndDelete(id);
+    return found ? this.map(found) : null;
   }
 
   async create(props: CreateProductProps): Promise<Product> {
