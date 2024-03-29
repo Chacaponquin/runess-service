@@ -1,49 +1,79 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose from 'mongoose';
-import { UserEmail } from '@modules/user/value-object';
+import mongoose, { Document } from "mongoose";
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { UserEmail } from "@modules/user/value-object";
 
-@Schema({ timestamps: true, autoCreate: true })
-export class User {
+@Schema({
+  timestamps: true,
+  autoCreate: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true },
+})
+class User {
   @Prop({
     required: true,
-    type: mongoose.SchemaTypes.String
+    type: mongoose.SchemaTypes.String,
   })
   firstName: string;
 
   @Prop({
     required: true,
-    type: mongoose.SchemaTypes.String
+    type: mongoose.SchemaTypes.String,
   })
   lastName: string;
 
   @Prop({
-    default: null,
     unique: true,
     type: mongoose.SchemaTypes.String,
     validate: {
-      validator: (value: string) => {
+      validator(value: string) {
         return UserEmail.emailRegex.test(value);
-      }
+      },
     },
-    required: true
+    required: true,
   })
   email: string;
 
   @Prop({ type: mongoose.SchemaTypes.String, required: true })
-  password: string | null;
+  password: string;
 
-  @Prop({ default: null, type: mongoose.SchemaTypes.String })
+  @Prop({ type: mongoose.SchemaTypes.String, default: null })
   image: string | null;
 
-  @Prop({ type: mongoose.SchemaTypes.String })
-  phone: string;
+  @Prop({ type: mongoose.SchemaTypes.String, default: null })
+  phone: string | null;
 
-  @Prop({ type: mongoose.SchemaTypes.String })
-  country: string;
+  @Prop({ type: mongoose.SchemaTypes.String, default: null })
+  country: string | null;
 }
-const UserSchema = SchemaFactory.createForClass(User);
 
-UserSchema.set('toObject', { virtuals: true });
-UserSchema.set('toJSON', { virtuals: true });
+@Schema({
+  timestamps: true,
+  autoCreate: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true },
+})
+class AdminUser {
+  @Prop({
+    unique: true,
+    type: mongoose.SchemaTypes.String,
+    validate: {
+      validator(value: string) {
+        return UserEmail.emailRegex.test(value);
+      },
+    },
+    required: true,
+  })
+  email: string;
 
-export { UserSchema };
+  @Prop({ type: mongoose.SchemaTypes.String, required: true, unique: true })
+  username: string;
+
+  @Prop({ type: mongoose.SchemaTypes.String, required: true })
+  password: string;
+}
+
+export const UserSchema = SchemaFactory.createForClass(User);
+export const AdminUserSchema = SchemaFactory.createForClass(AdminUser);
+
+export type IUser = User & Document;
+export type IAdmin = AdminUser & Document;

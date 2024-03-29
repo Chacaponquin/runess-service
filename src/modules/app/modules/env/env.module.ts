@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { EnvService } from './services/env.service';
 import { ConfigModule } from '@nestjs/config';
 
@@ -16,6 +16,7 @@ function filterEnv() {
 
 const envFile = filterEnv();
 
+@Global()
 @Module({
   controllers: [],
   exports: [EnvService],

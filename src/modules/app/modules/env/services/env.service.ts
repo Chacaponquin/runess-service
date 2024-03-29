@@ -13,36 +13,20 @@ export class EnvService {
     return this.configService.get<string>("CURRENT_USER_TOKEN_EXPIRES");
   }
 
-  public get SERVER_URL() {
-    return this.configService.get<string>("SERVER_URL");
+  get MAIL_HOST() {
+    return this.configService.get<string>("MAIL_HOST");
   }
 
-  public get GITHUB_CLIENT_ID() {
-    return this.configService.get<string>("GITHUB_CLIENT_ID");
+  get MAIL_USER() {
+    return this.configService.get<string>("MAIL_USER");
   }
 
-  public get GITHUB_CLIENT_SECRET() {
-    return this.configService.get<string>("GITHUB_CLIENT_SECRET");
+  get MAIL_PASSWORD() {
+    return this.configService.get<string>("MAIL_PASSWORD");
   }
 
-  public get GOOGLE_CLIENT_ID() {
-    return this.configService.get<string>("GOOGLE_CLIENT_ID");
-  }
-
-  public get GOOGLE_CLIENT_SECRET() {
-    return this.configService.get<string>("GOOGLE_CLIENT_SECRET");
-  }
-
-  public get CLAUDINARY_API_KEY() {
-    return this.configService.get<string>("CLAUDINARY_API_KEY");
-  }
-
-  public get CLAUDINARY_API_SECRET() {
-    return this.configService.get<string>("CLAUDINARY_API_SECRET");
-  }
-
-  public get CLIENT_REDIRECT_URL() {
-    return this.configService.get<string>("CLIENT_REDIRECT_URL") as string;
+  get MAIL_FROM() {
+    return this.configService.get<string>("MAIL_FROM");
   }
 
   public get AWS_S3_ACCESS_KEY_ID() {
