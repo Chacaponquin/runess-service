@@ -1,4 +1,4 @@
-import { MedicineServices } from "@modules/product/services/medicine.services";
+import { MedicineServices } from "@modules/product/services/medicine/medicine.services";
 
 export class DeleteMedicine {
   constructor(private readonly medicineServices: MedicineServices) {}

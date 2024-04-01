@@ -1,5 +1,5 @@
 import { UpdateMedicineDTO } from "@modules/product/dto/medicine";
-import { MedicineServices } from "@modules/product/services/medicine.services";
+import { MedicineServices } from "@modules/product/services/medicine/medicine.services";
 
 interface Props {
   id: string;

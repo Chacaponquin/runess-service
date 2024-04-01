@@ -16,12 +16,14 @@ export const ROUTES = {
     CREATE: "create",
     UPDATE: "update/:id",
     REMOVE: "remove/:id",
+    FILTER: "filter",
   },
   MEDICINE: {
     ROOT: "medicine",
     CREATE: "create",
     UPDATE: "update/:id",
     REMOVE: "remove/:id",
+    FILTER: "filter",
   },
   ORDER: {
     ROOT: "order",

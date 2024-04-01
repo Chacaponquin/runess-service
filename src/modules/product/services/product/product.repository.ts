@@ -2,9 +2,12 @@ import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { DB_MOELS } from "@shared/constants";
 import { Model } from "mongoose";
-import { IProduct } from "../infrastructure/mongo/schema";
-import { Product } from "../domain";
-import { CreateProductProps, UpdateProductProps } from "../interfaces/product";
+import { IProduct } from "../../infrastructure/mongo/schema";
+import { Product } from "../../domain";
+import {
+  CreateProductProps,
+  UpdateProductProps,
+} from "../../interfaces/product";
 import { MediaServices } from "@modules/media/services/media.service";
 
 @Injectable()
@@ -40,8 +43,9 @@ export class ProductRepository {
       provider: props.provider,
       originalPrice: props.originalPrice,
       price: props.price,
-      category: props.category,
+      categories: props.categories,
       images: props.images,
+      type: props.type,
     });
 
     await newProduct.save();
@@ -55,7 +59,7 @@ export class ProductRepository {
       provider: props.provider,
       originalPrice: props.originalPrice,
       price: props.price,
-      category: props.category,
+      categories: props.categories,
       images: props.images,
     });
   }
@@ -72,6 +76,8 @@ export class ProductRepository {
         id: i.id,
       })),
       provider: product.provider,
+      categories: product.categories,
+      type: product.type,
     });
   }
 }

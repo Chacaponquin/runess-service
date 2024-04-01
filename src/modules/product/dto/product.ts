@@ -6,6 +6,7 @@ import {
   IsString,
   Min,
 } from "class-validator";
+import { PRODUCT_TYPES } from "../constants";
 
 export class ProductFieldsDTO {
   @IsNotEmpty()
@@ -27,7 +28,46 @@ export class ProductFieldsDTO {
   @ArrayMinSize(1)
   images: Array<string>;
 
+  @IsArray()
   @IsNotEmpty()
+  @IsString({ each: true })
+  @ArrayMinSize(1)
+  categories: Array<string>;
+}
+
+export class FilterProductDTO {
+  @IsNumber()
+  @Min(0)
+  minPrice: number;
+
+  @IsNumber()
+  @Min(0)
+  maxPrice: number;
+
   @IsString()
-  category: string;
+  name: string;
+
+  @IsString()
+  provider: string;
+
+  @IsNumber()
+  @Min(1)
+  page: number;
+}
+
+export interface RespProductDTO {
+  id: string;
+  name: string;
+  price: number;
+  images: Array<RespProductImageDTO>;
+  categories: string[];
+  type: PRODUCT_TYPES;
+  provider: string;
+}
+
+export interface RespProductImageDTO {
+  id: string;
+  size: number;
+  name: string;
+  source: string;
 }

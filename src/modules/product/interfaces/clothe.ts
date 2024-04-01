@@ -1,3 +1,5 @@
+import { FilterClotheDTO } from "../dto/clothe";
+
 export interface CreateClotheProps {
   productId: string;
   colors: Array<string>;
@@ -7,3 +9,5 @@ export interface CreateClotheProps {
 export type UpdateClotheProps = Omit<CreateClotheProps, "productId"> & {
   id: string;
 };
+
+export interface FilterClotheProps extends FilterClotheDTO {}

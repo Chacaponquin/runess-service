@@ -2,7 +2,7 @@ import { PaymentService } from "@modules/payment/services/payment-service";
 import { CreateOrderDTO, OrderItemDTO } from "../dto/create";
 import { OrderService } from "../services/order-service";
 import { ClientServices } from "@modules/client/services/client.service";
-import { ProductServices } from "@modules/product/services/product.services";
+import { ProductServices } from "@modules/product/services/product/product.services";
 import { OrderMissingProductException } from "../exceptions";
 
 export class CreateOrder {

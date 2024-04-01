@@ -1,5 +1,5 @@
 import { Controller, Get, Param } from "@nestjs/common";
-import { ProductServices } from "../services/product.services";
+import { ProductServices } from "../services/product/product.services";
 import { ROUTES } from "@modules/app/constants";
 import { FindProductById } from "../use-cases";
 

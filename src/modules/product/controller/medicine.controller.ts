@@ -1,8 +1,18 @@
 import { ROUTES } from "@modules/app/constants";
 import { Body, Controller, Delete, Param, Post, Put } from "@nestjs/common";
-import { CreateMedicineDTO, UpdateMedicineDTO } from "../dto/medicine";
-import { CreateMedicine, DeleteMedicine, UpdateMedicine } from "../use-cases";
-import { MedicineServices } from "../services/medicine.services";
+import {
+  CreateMedicineDTO,
+  FilterMedicinesDTO,
+  RespMedicineDTO,
+  UpdateMedicineDTO,
+} from "../dto/medicine";
+import {
+  CreateMedicine,
+  DeleteMedicine,
+  FilterMedicines,
+  UpdateMedicine,
+} from "../use-cases";
+import { MedicineServices } from "../services/medicine/medicine.services";
 
 @Controller(ROUTES.MEDICINE.ROOT)
 export class MedicineController {
@@ -27,5 +37,11 @@ export class MedicineController {
   async delete(@Param("id") id: string): Promise<void> {
     const useCase = new DeleteMedicine(this.services);
     await useCase.execute(id);
+  }
+
+  @Post(ROUTES.MEDICINE.FILTER)
+  async filter(@Body() dto: FilterMedicinesDTO): Promise<RespMedicineDTO[]> {
+    const useCase = new FilterMedicines(this.services);
+    return await useCase.execute(dto);
   }
 }

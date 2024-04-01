@@ -1,10 +1,14 @@
 import { Injectable } from "@nestjs/common";
-import { IMedicine } from "../infrastructure/mongo/schema";
+import { IMedicine } from "../../infrastructure/mongo/schema";
 import { Model } from "mongoose";
 import { DB_MOELS } from "@shared/constants";
 import { InjectModel } from "@nestjs/mongoose";
-import { Medicine } from "../domain";
+import { Medicine } from "../../domain";
 import { MediaServices } from "@modules/media/services/media.service";
+import { PRODUCT_TYPES } from "../../constants";
+import { FilterMedicineProps } from "@modules/product/interfaces/medicine";
+import { FilterPage } from "@modules/product/domain/filter-page";
+import { MedicineMatch } from "@modules/product/infrastructure/mongo/domain";
 
 @Injectable()
 export class MedicineRepository {
@@ -14,13 +18,18 @@ export class MedicineRepository {
     private readonly mediaServices: MediaServices,
   ) {}
 
-  async create({ productId }: { productId: string }): Promise<Medicine> {
+  length(): Promise<number> {
+    return this.model.countDocuments();
+  }
+
+  async create({ productId }: { productId: string }): Promise<string> {
     const newMedicine = new this.model({
       product: productId,
     });
+
     await newMedicine.save();
 
-    return this.map(newMedicine);
+    return newMedicine.id;
   }
 
   async remove(id: string): Promise<Medicine | null> {
@@ -31,6 +40,31 @@ export class MedicineRepository {
     } else {
       return null;
     }
+  }
+
+  async filter(props: FilterMedicineProps): Promise<Medicine[]> {
+    const page = new FilterPage(props.page);
+
+    const result = await this.model.aggregate<IMedicine>([
+      {
+        $lookup: {
+          from: DB_MOELS.PRODUCTS,
+          localField: "product",
+          foreignField: "_id",
+          as: "product",
+        },
+      },
+      {
+        $unwind: "$product",
+      },
+      {
+        $match: new MedicineMatch(props).match,
+      },
+      { $skip: page.init },
+      { $limit: page.final },
+    ]);
+
+    return result.map((c) => this.map(c));
   }
 
   private map(medicine: IMedicine): Medicine {
@@ -46,6 +80,8 @@ export class MedicineRepository {
       name: medicine.product.name,
       price: medicine.product.price,
       provider: medicine.product.provider,
+      categories: medicine.product.categories,
+      type: PRODUCT_TYPES.MEDICINE,
     });
   }
 }

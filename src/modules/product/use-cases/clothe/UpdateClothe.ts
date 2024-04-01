@@ -1,5 +1,5 @@
 import { UpdateClotheDTO } from "@modules/product/dto/clothe";
-import { ClotheServices } from "@modules/product/services/clothe.services";
+import { ClotheServices } from "@modules/product/services/clothe/clothe.services";
 
 interface Props {
   id: string;

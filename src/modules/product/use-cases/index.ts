@@ -10,6 +10,8 @@ import { DeleteClothe } from "./clothe/DeleteClothe";
 import { CreateMedicine } from "./medicine/CreateMedicine";
 import { UpdateMedicine } from "./medicine/UpdateMedicine";
 import { DeleteMedicine } from "./medicine/DeleteMedicine";
+import { FilterClothes } from "./clothe/FilterClothes";
+import { FilterMedicines } from "./medicine/FilterMedicines";
 
 export {
   GetNewProducts,
@@ -22,4 +24,6 @@ export {
   CreateMedicine,
   UpdateMedicine,
   DeleteMedicine,
+  FilterClothes,
+  FilterMedicines,
 };

@@ -1,7 +1,7 @@
-import { SendProductDTO } from "@modules/product/dto/send";
+import { RespProductDTO } from "@modules/product/dto/product";
 
 export class GetUserFavorites {
-  execute(): Array<SendProductDTO> {
+  execute(): Array<RespProductDTO> {
     return [];
   }
 }

@@ -5,7 +5,7 @@ import { OrderService } from "../services/order-service";
 import { CreateOrderDTO } from "../dto/create";
 import { PaymentService } from "@modules/payment/services/payment-service";
 import { ClientServices } from "@modules/client/services/client.service";
-import { ProductServices } from "@modules/product/services/product.services";
+import { ProductServices } from "@modules/product/services/product/product.services";
 
 @Controller(ROUTES.ORDER.ROOT)
 export class OrderController {

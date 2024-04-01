@@ -1,11 +1,20 @@
 import { Injectable } from "@nestjs/common";
 import { ProductRepository } from "./product.repository";
-import { Product } from "../domain";
-import { CreateProductProps, UpdateProductProps } from "../interfaces/product";
+import { Product } from "../../domain";
+import {
+  CreateProductProps,
+  UpdateProductProps,
+} from "../../interfaces/product";
 import { MediaServices } from "@modules/media/services/media.service";
+import { Categories, Colors, Providers, Sizes } from "../../constants";
 
 @Injectable()
 export class ProductServices {
+  readonly providers = new Providers();
+  readonly categories = new Categories();
+  readonly colors = new Colors();
+  readonly sizes = new Sizes();
+
   constructor(
     private readonly repository: ProductRepository,
     private readonly mediaServices: MediaServices,

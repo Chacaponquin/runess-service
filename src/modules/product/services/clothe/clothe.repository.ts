@@ -1,11 +1,18 @@
 import { Injectable } from "@nestjs/common";
-import { IClothe } from "../infrastructure/mongo/schema";
+import { IClothe } from "../../infrastructure/mongo/schema";
 import { Model } from "mongoose";
 import { DB_MOELS } from "@shared/constants";
 import { InjectModel } from "@nestjs/mongoose";
-import { Clothe } from "../domain";
-import { CreateClotheProps, UpdateClotheProps } from "../interfaces/clothe";
+import { Clothe } from "../../domain";
+import {
+  CreateClotheProps,
+  FilterClotheProps,
+  UpdateClotheProps,
+} from "../../interfaces/clothe";
 import { MediaServices } from "@modules/media/services/media.service";
+import { PRODUCT_TYPES } from "../../constants";
+import { ClotheMatch } from "@modules/product/infrastructure/mongo/domain";
+import { FilterPage } from "@modules/product/domain/filter-page";
 
 @Injectable()
 export class ClotheRepository {
@@ -15,7 +22,11 @@ export class ClotheRepository {
     private readonly mediaServices: MediaServices,
   ) {}
 
-  async create(dto: CreateClotheProps): Promise<Clothe> {
+  length(): Promise<number> {
+    return this.model.countDocuments();
+  }
+
+  async create(dto: CreateClotheProps): Promise<string> {
     const newClothe = new this.model({
       product: dto.productId,
       sizes: dto.sizes,
@@ -24,7 +35,7 @@ export class ClotheRepository {
 
     await newClothe.save();
 
-    return this.map(newClothe);
+    return newClothe.id;
   }
 
   async remove(id: string): Promise<Clothe | null> {
@@ -35,6 +46,35 @@ export class ClotheRepository {
     } else {
       return null;
     }
+  }
+
+  async filter(props: FilterClotheProps): Promise<Clothe[]> {
+    const page = new FilterPage(props.page);
+
+    const result = await this.model
+      .aggregate<IClothe>([
+        {
+          $lookup: {
+            from: DB_MOELS.PRODUCTS,
+            localField: "product",
+            foreignField: "_id",
+            as: "product",
+          },
+        },
+        {
+          $unwind: "$product",
+        },
+        {
+          $match: new ClotheMatch(props).match,
+        },
+        { $skip: page.init },
+        { $limit: page.final },
+      ])
+      .exec();
+
+    const data = result.map((c) => this.map(c));
+
+    return data;
   }
 
   async update(props: UpdateClotheProps): Promise<Clothe | null> {
@@ -52,17 +92,21 @@ export class ClotheRepository {
 
   private map(clothe: IClothe): Clothe {
     return new Clothe({
-      id: clothe.id,
-      productId: clothe.product.id,
+      id: clothe._id,
+      productId: clothe.product._id,
       images: clothe.product.images.map((i) => ({
         name: i.name,
         size: i.size,
         source: this.mediaServices.getImageUrl(i.aws_key),
-        id: i.id,
+        id: i._id,
       })),
       name: clothe.product.name,
       price: clothe.product.price,
       provider: clothe.product.provider,
+      categories: clothe.product.categories,
+      type: PRODUCT_TYPES.CLOTHE,
+      colors: clothe.colors,
+      sizes: clothe.sizes,
     });
   }
 }
