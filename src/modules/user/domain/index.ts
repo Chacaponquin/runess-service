@@ -1,6 +1,8 @@
 interface UserProps {
   id: string;
   password: string;
+  firstName: string;
+  lastName: string;
   favorites: Array<string>;
 }
 
@@ -36,12 +38,20 @@ export class User {
   readonly id: string;
   readonly password: string;
   readonly favorites: Array<string>;
+  readonly firstName: string;
+  readonly lastName: string;
 
-  constructor({ id, password, favorites }: UserProps) {
+  constructor({ id, password, favorites, firstName, lastName }: UserProps) {
     this.id = id;
     this.password = password;
     this.favorites = favorites;
+    this.firstName = firstName;
+    this.lastName = lastName;
   }
+}
+
+export interface CurrentUser {
+  id: string;
 }
 
 export class AdminUser {

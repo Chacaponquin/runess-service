@@ -1,3 +1,19 @@
+import { CurrentUser } from "@modules/user/domain";
+import { DeleteProductFromFavoriteDTO } from "@modules/user/dto/user";
+import { UserService } from "@modules/user/services/user.service";
+
+interface Props {
+  dto: DeleteProductFromFavoriteDTO;
+  user: CurrentUser;
+}
+
 export class DeleteProductFromFavorites {
-  async execute() {}
+  constructor(private readonly services: UserService) {}
+
+  async execute({ dto, user }: Props): Promise<void> {
+    await this.services.deleteProductFromFavorite({
+      userId: user.id,
+      productId: dto.productId,
+    });
+  }
 }

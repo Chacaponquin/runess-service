@@ -1,4 +1,4 @@
-import { SendUserOrderDTO } from "../../dto/send";
+import { SendUserOrderDTO } from "../../dto/user";
 
 export class GetUserOrders {
   async execute(): Promise<Array<SendUserOrderDTO>> {

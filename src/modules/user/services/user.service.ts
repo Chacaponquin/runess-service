@@ -1,11 +1,15 @@
 import { Injectable } from "@nestjs/common";
-import { User, UserMessage } from "../domain";
+import { CurrentUser, User, UserMessage } from "../domain";
 import { CreateUserDTO } from "../dto/create";
 import { UserRepository } from "./user.repository";
 import { JwtService } from "@nestjs/jwt";
 import { JwtPayload } from "../interfaces/jwt";
 import { UserMessageRepository } from "./message.repository";
 import { CreateContactMessageDTO } from "../dto/message";
+import {
+  AddProductToFavoriteProps,
+  DeleteProductFromFavoriteProps,
+} from "../interfaces/user";
 
 @Injectable()
 export class UserService {
@@ -24,6 +28,25 @@ export class UserService {
     return this.jwtService.sign(payload);
   }
 
+  async verifyToken(token: string): Promise<CurrentUser | null> {
+    try {
+      const payload: JwtPayload = this.jwtService.verify(token);
+      const user = await this.findById(payload.userId);
+
+      if (user) {
+        return { id: user.id };
+      } else {
+        return null;
+      }
+    } catch (error) {
+      return null;
+    }
+  }
+
+  findById(id: string): Promise<User | null> {
+    return this.userRepository.findById(id);
+  }
+
   findUserByEmail(email: string): Promise<User | null> {
     return this.userRepository.findByEmail(email);
   }
@@ -34,5 +57,15 @@ export class UserService {
 
   countProductFavorites(id: string): Promise<number> {
     return this.userRepository.countProductFavorites(id);
+  }
+
+  async addProductToFavorite(props: AddProductToFavoriteProps): Promise<void> {
+    await this.userRepository.addProductToFavorite(props);
+  }
+
+  async deleteProductFromFavorite(
+    props: DeleteProductFromFavoriteProps,
+  ): Promise<void> {
+    await this.userRepository.deleteProductFromFavorite(props);
   }
 }

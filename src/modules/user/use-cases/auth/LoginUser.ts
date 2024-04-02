@@ -2,6 +2,7 @@ import { CryptServices } from "@shared/services/crypt.service";
 import { LoginUserDTO } from "../../dto/login";
 import { UserService } from "../../services/user.service";
 import { LoginUserError } from "../../exceptions";
+import { RespLoginUserDTO } from "@modules/user/dto/user";
 
 export class LoginUser {
   constructor(
@@ -9,7 +10,7 @@ export class LoginUser {
     private readonly cryptServices: CryptServices,
   ) {}
 
-  async execute(dto: LoginUserDTO): Promise<string> {
+  async execute(dto: LoginUserDTO): Promise<RespLoginUserDTO> {
     const found = await this.userServices.findUserByEmail(dto.email);
 
     if (found) {
@@ -20,12 +21,16 @@ export class LoginUser {
 
       if (equal) {
         const token = this.userServices.generateAccessToken(found.id);
-        return token;
-      } else {
-        throw new LoginUserError();
+
+        return {
+          accessToken: token,
+          firstName: found.firstName,
+          id: found.id,
+          lastName: found.lastName,
+        };
       }
-    } else {
-      throw new LoginUserError();
     }
+
+    throw new LoginUserError();
   }
 }

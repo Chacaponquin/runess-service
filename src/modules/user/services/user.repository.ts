@@ -5,6 +5,10 @@ import { InjectModel } from "@nestjs/mongoose";
 import { DB_MOELS } from "@shared/constants";
 import { Model } from "mongoose";
 import { IUser } from "../infrastructure/mongo/schema";
+import {
+  AddProductToFavoriteProps,
+  DeleteProductFromFavoriteProps,
+} from "../interfaces/user";
 
 @Injectable()
 export class UserRepository {
@@ -32,11 +36,18 @@ export class UserRepository {
     return result ? this.map(result) : null;
   }
 
+  async findById(id: string): Promise<User | null> {
+    const result = await this.model.findById(id);
+    return result ? this.map(result) : null;
+  }
+
   private map(user: IUser): User {
     return new User({
       id: user.id,
       password: user.password,
       favorites: user.favorites.map((i) => i.toString()),
+      firstName: user.firstName,
+      lastName: user.lastName,
     });
   }
 
@@ -52,6 +63,24 @@ export class UserRepository {
     });
 
     return sum;
+  }
+
+  async addProductToFavorite(props: AddProductToFavoriteProps): Promise<void> {
+    await this.model.findByIdAndUpdate(props.userId, {
+      $push: {
+        favorites: props.productId,
+      },
+    });
+  }
+
+  async deleteProductFromFavorite(
+    props: DeleteProductFromFavoriteProps,
+  ): Promise<void> {
+    await this.model.findByIdAndUpdate(props.userId, {
+      $pull: {
+        favorites: props.productId,
+      },
+    });
   }
 
   private async all(): Promise<User[]> {

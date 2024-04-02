@@ -1,3 +1,18 @@
+import { CurrentUser } from "@modules/user/domain";
+import { UserService } from "@modules/user/services/user.service";
+
+interface Props {
+  user: CurrentUser;
+  productId: string;
+}
+
 export class AddProductToFavorites {
-  async execute() {}
+  constructor(private readonly services: UserService) {}
+
+  async execute({ productId, user }: Props): Promise<void> {
+    await this.services.addProductToFavorite({
+      productId: productId,
+      userId: user.id,
+    });
+  }
 }

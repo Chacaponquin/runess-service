@@ -41,6 +41,8 @@ export const ROUTES = {
     ROOT: "user",
     CONTACT: "contact",
     ORDERS: "orders",
+    ADD_PRODUCT_FAVORITE: "add-product-favorite",
+    DELETE_PRODUCT_FAVORITE: "delete-product-favorite",
   },
   ADMIN_USER: {
     ROOT: "admin",
