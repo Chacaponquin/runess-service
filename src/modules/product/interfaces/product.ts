@@ -21,3 +21,7 @@ export interface GetSpecificProductsProps {
   type: PRODUCT_TYPES;
   page: number;
 }
+
+export interface GetProps {
+  page: number;
+}

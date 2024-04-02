@@ -8,6 +8,13 @@ import {
 } from "class-validator";
 import { PRODUCT_TYPES } from "../constants";
 
+export class GetDTO {
+  @IsNotEmpty()
+  @IsNumber()
+  @Min(1)
+  page: number;
+}
+
 export class GetSpecificProductsDTO {
   @IsNotEmpty()
   @IsNumber()

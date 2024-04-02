@@ -1,5 +1,13 @@
 import { ROUTES } from "@modules/app/constants";
-import { Body, Controller, Delete, Param, Post, Put } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from "@nestjs/common";
 import { ClotheServices } from "../services/clothe/clothe.services";
 import {
   CreateClotheDTO,
@@ -11,12 +19,15 @@ import {
   CreateClothe,
   DeleteClothe,
   FilterClothes,
+  FindClotheById,
+  GetAllClothesSizes,
+  GetClothes,
   GetNewProducts,
   GetTopFavoriteProducts,
   GetTrendingProducts,
   UpdateClothe,
 } from "../use-cases";
-import { GetSpecificProductsDTO, RespProductDTO } from "../dto/product";
+import { GetDTO, GetSpecificProductsDTO, RespProductDTO } from "../dto/product";
 import { ProductServices } from "../services/product/product.services";
 import { PRODUCT_TYPES } from "../constants";
 
@@ -74,5 +85,23 @@ export class ClotheController {
   ): Promise<RespProductDTO[]> {
     const useCase = new GetTopFavoriteProducts(this.productServices);
     return await useCase.execute(dto, PRODUCT_TYPES.CLOTHE);
+  }
+
+  @Post()
+  async get(@Body() dto: GetDTO): Promise<RespClotheDTO[]> {
+    const useCase = new GetClothes(this.clotheServices);
+    return await useCase.execute(dto);
+  }
+
+  @Get(ROUTES.CLOTHE.ALL_SIZES)
+  async allSizes(): Promise<string[]> {
+    const useCase = new GetAllClothesSizes(this.clotheServices);
+    return await useCase.execute();
+  }
+
+  @Get(ROUTES.SECTION.FIND)
+  async find(@Param("id") id: string): Promise<RespClotheDTO> {
+    const useCase = new FindClotheById(this.clotheServices);
+    return await useCase.execute(id);
   }
 }

@@ -12,7 +12,8 @@ import {
 import { MediaServices } from "@modules/media/services/media.service";
 import { PRODUCT_TYPES } from "../../constants";
 import { ClotheMatch } from "@modules/product/infrastructure/mongo/domain";
-import { FilterPage } from "@modules/product/domain/page";
+import { FilterPage, GetPage } from "@modules/product/domain/page";
+import { GetProps } from "@modules/product/interfaces/product";
 
 @Injectable()
 export class ClotheRepository {
@@ -88,6 +89,39 @@ export class ClotheRepository {
     } else {
       return null;
     }
+  }
+
+  async get(props: GetProps): Promise<Clothe[]> {
+    const page = new GetPage(props.page);
+
+    const result = await this.model
+      .find()
+      .skip(page.init)
+      .limit(page.final)
+      .populate("product");
+
+    return result.map((r) => this.map(r));
+  }
+
+  async allSizes(): Promise<string[]> {
+    const result = await this.model.find();
+
+    const sizes = [] as Array<string>;
+
+    for (const clothe of result) {
+      clothe.sizes.forEach((s) => {
+        if (!sizes.includes(s)) {
+          sizes.push(s);
+        }
+      });
+    }
+
+    return sizes;
+  }
+
+  async findById(id: string): Promise<Clothe | null> {
+    const found = await this.model.findOne({ _id: id }).populate("product");
+    return found ? this.map(found) : null;
   }
 
   private map(clothe: IClothe): Clothe {

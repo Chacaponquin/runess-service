@@ -9,6 +9,7 @@ import { ProductServices } from "../product/product.services";
 import { chaca, schemas } from "chaca";
 import { PRODUCT_TYPES } from "../../constants";
 import { Clothe } from "../../domain";
+import { GetProps } from "@modules/product/interfaces/product";
 
 @Injectable()
 export class ClotheServices implements OnModuleInit {
@@ -71,6 +72,10 @@ export class ClotheServices implements OnModuleInit {
     }
   }
 
+  findById(id: string): Promise<Clothe | null> {
+    return this.clotheRepository.findById(id);
+  }
+
   async createClothe(dto: CreateClotheDTO): Promise<string> {
     const product = await this.productServices.createProduct({
       images: dto.images,
@@ -98,5 +103,13 @@ export class ClotheServices implements OnModuleInit {
 
   filter(props: FilterClotheDTO): Promise<Clothe[]> {
     return this.clotheRepository.filter(props);
+  }
+
+  get(props: GetProps): Promise<Clothe[]> {
+    return this.clotheRepository.get(props);
+  }
+
+  allSizes(): Promise<string[]> {
+    return this.clotheRepository.allSizes();
   }
 }

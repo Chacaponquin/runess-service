@@ -13,6 +13,7 @@ export const ROUTES = {
   },
   CLOTHE: {
     ROOT: "clothe",
+    ALL_SIZES: "all-sizes",
   },
   MEDICINE: {
     ROOT: "medicine",
@@ -25,6 +26,7 @@ export const ROUTES = {
     TRENDING: "trending",
     NEW: "new",
     POPULAR: "popular",
+    FIND: "/find/:id",
   },
   ORDER: {
     ROOT: "order",

@@ -24,3 +24,9 @@ export class SepecificProductsPage extends Page {
     super({ page: page, step: 4 });
   }
 }
+
+export class GetPage extends Page {
+  constructor(page: number) {
+    super({ page: page, step: 20 });
+  }
+}

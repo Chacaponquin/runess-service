@@ -12,6 +12,10 @@ import { UpdateMedicine } from "./medicine/UpdateMedicine";
 import { DeleteMedicine } from "./medicine/DeleteMedicine";
 import { FilterClothes } from "./clothe/FilterClothes";
 import { FilterMedicines } from "./medicine/FilterMedicines";
+import { GetClothes } from "./clothe/GetClothes";
+import { GetAllClothesSizes } from "./clothe/GetAllClotheSizes";
+import { FindClotheById } from "./clothe/FindClotheById";
+
 
 export {
   GetNewProducts,
@@ -26,4 +30,6 @@ export {
   DeleteMedicine,
   FilterClothes,
   FilterMedicines,
+  GetClothes,
+  GetAllClothesSizes,FindClotheById
 };
