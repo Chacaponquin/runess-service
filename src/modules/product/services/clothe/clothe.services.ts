@@ -76,6 +76,10 @@ export class ClotheServices implements OnModuleInit {
     return this.clotheRepository.findById(id);
   }
 
+  similars(id: string): Promise<Clothe[]> {
+    return this.clotheRepository.similars(id);
+  }
+
   async createClothe(dto: CreateClotheDTO): Promise<string> {
     const product = await this.productServices.createProduct({
       images: dto.images,

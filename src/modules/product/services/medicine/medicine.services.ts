@@ -9,6 +9,7 @@ import {
 import { chaca, schemas } from "chaca";
 import { PRODUCT_TYPES } from "../../constants";
 import { Medicine } from "../../domain";
+import { GetProps } from "@modules/product/interfaces/product";
 
 @Injectable()
 export class MedicineServices implements OnModuleInit {
@@ -39,12 +40,20 @@ export class MedicineServices implements OnModuleInit {
     }
   }
 
+  findById(id: string): Promise<Medicine | null> {
+    return this.repository.findById(id);
+  }
+
   async delete(id: string): Promise<void> {
     const clothe = await this.repository.remove(id);
 
     if (clothe) {
       await this.productServices.deleteOne(clothe.productId);
     }
+  }
+
+  get(props: GetProps): Promise<Medicine[]> {
+    return this.repository.get(props);
   }
 
   async update(id: string, dto: UpdateMedicineDTO) {
@@ -57,6 +66,10 @@ export class MedicineServices implements OnModuleInit {
         id: found.id,
       });
     }
+  }
+
+  similars(id: string): Promise<Medicine[]> {
+    return this.repository.similars(id);
   }
 
   filter(props: FilterMedicinesDTO): Promise<Medicine[]> {

@@ -15,7 +15,10 @@ import { FilterMedicines } from "./medicine/FilterMedicines";
 import { GetClothes } from "./clothe/GetClothes";
 import { GetAllClothesSizes } from "./clothe/GetAllClotheSizes";
 import { FindClotheById } from "./clothe/FindClotheById";
-
+import { FindMedicineById } from "./medicine/FindMedicineById";
+import { GetMedicines } from "./medicine/GetMedicines";
+import { GetMedicineSimilars } from "./medicine/GetMedicineSimilars";
+import { GetClotheSimilars } from "./clothe/GetClotheSimilars";
 
 export {
   GetNewProducts,
@@ -31,5 +34,10 @@ export {
   FilterClothes,
   FilterMedicines,
   GetClothes,
-  GetAllClothesSizes,FindClotheById
+  GetAllClothesSizes,
+  FindClotheById,
+  FindMedicineById,
+  GetMedicines,
+  GetMedicineSimilars,
+  GetClotheSimilars,
 };

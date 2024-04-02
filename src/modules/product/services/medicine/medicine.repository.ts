@@ -7,8 +7,9 @@ import { Medicine } from "../../domain";
 import { MediaServices } from "@modules/media/services/media.service";
 import { PRODUCT_TYPES } from "../../constants";
 import { FilterMedicineProps } from "@modules/product/interfaces/medicine";
-import { FilterPage } from "@modules/product/domain/page";
+import { FilterPage, GetPage } from "@modules/product/domain/page";
 import { MedicineMatch } from "@modules/product/infrastructure/mongo/domain";
+import { GetProps } from "@modules/product/interfaces/product";
 
 @Injectable()
 export class MedicineRepository {
@@ -42,6 +43,30 @@ export class MedicineRepository {
     }
   }
 
+  async get(props: GetProps): Promise<Medicine[]> {
+    const page = new GetPage(props.page);
+
+    const result = await this.model
+      .find()
+      .skip(page.init)
+      .limit(page.final)
+      .populate("product");
+
+    return result.map((r) => this.map(r));
+  }
+
+  async similars(id: string): Promise<Medicine[]> {
+    const found = await this.findById(id);
+
+    if (found) {
+      const result = await this.model.find().limit(6).populate("product");
+
+      return result.map((r) => this.map(r));
+    } else {
+      return [];
+    }
+  }
+
   async filter(props: FilterMedicineProps): Promise<Medicine[]> {
     const page = new FilterPage(props.page);
 
@@ -65,6 +90,11 @@ export class MedicineRepository {
     ]);
 
     return result.map((c) => this.map(c));
+  }
+
+  async findById(id: string): Promise<Medicine | null> {
+    const found = await this.model.findOne({ _id: id }).populate("product");
+    return found ? this.map(found) : null;
   }
 
   private map(medicine: IMedicine): Medicine {

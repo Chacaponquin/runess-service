@@ -22,6 +22,7 @@ import {
   FindClotheById,
   GetAllClothesSizes,
   GetClothes,
+  GetClotheSimilars,
   GetNewProducts,
   GetTopFavoriteProducts,
   GetTrendingProducts,
@@ -102,6 +103,12 @@ export class ClotheController {
   @Get(ROUTES.SECTION.FIND)
   async find(@Param("id") id: string): Promise<RespClotheDTO> {
     const useCase = new FindClotheById(this.clotheServices);
+    return await useCase.execute(id);
+  }
+
+  @Get(ROUTES.SECTION.SIMILARS)
+  async similars(@Param("id") id: string): Promise<RespProductDTO[]> {
+    const useCase = new GetClotheSimilars(this.clotheServices);
     return await useCase.execute(id);
   }
 }

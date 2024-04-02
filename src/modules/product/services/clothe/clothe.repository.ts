@@ -119,6 +119,18 @@ export class ClotheRepository {
     return sizes;
   }
 
+  async similars(id: string): Promise<Clothe[]> {
+    const found = await this.findById(id);
+
+    if (found) {
+      const result = await this.model.find().limit(6).populate("product");
+
+      return result.map((r) => this.map(r));
+    } else {
+      return [];
+    }
+  }
+
   async findById(id: string): Promise<Clothe | null> {
     const found = await this.model.findOne({ _id: id }).populate("product");
     return found ? this.map(found) : null;
