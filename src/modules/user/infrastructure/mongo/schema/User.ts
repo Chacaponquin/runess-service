@@ -1,3 +1,4 @@
+import { IProduct } from "@modules/product/infrastructure/mongo/schema";
 import { UserEmail } from "@modules/user/value-object";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose, { Document } from "mongoose";
@@ -44,7 +45,15 @@ class User {
 
   @Prop({ type: mongoose.SchemaTypes.String, default: null })
   country: string | null;
+
+  @Prop({ type: mongoose.SchemaTypes.Array, default: [], required: false })
+  favorites: Array<mongoose.Types.ObjectId>;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+
 export type IUser = User & Document;
+
+export type PopulatedUser = User & {
+  favorites: Array<IProduct>;
+};

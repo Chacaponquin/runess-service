@@ -31,4 +31,8 @@ export class UserService {
   createMessage(props: CreateContactMessageDTO): Promise<UserMessage> {
     return this.messageRepository.create(props);
   }
+
+  countProductFavorites(id: string): Promise<number> {
+    return this.userRepository.countProductFavorites(id);
+  }
 }

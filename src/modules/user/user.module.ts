@@ -10,7 +10,6 @@ import {
   UserSchema,
 } from "./infrastructure/mongo/schema";
 import { CryptServices } from "@shared/services/crypt.service";
-import { ProductModule } from "@modules/product/product.module";
 import { JwtModule } from "@nestjs/jwt";
 import { AdminController } from "./controller/admin.controller";
 import { AdminUserRepository } from "./services/admin.repository";
@@ -25,7 +24,6 @@ import { UserController } from "./controller/user.controller";
       { name: DB_MOELS.ADMIN_USERS, useFactory: () => AdminUserSchema },
       { name: DB_MOELS.USER_MESSAGES, useFactory: () => UserMessageSchema },
     ]),
-    ProductModule,
     JwtModule,
   ],
   controllers: [AuthController, AdminController, UserController],
@@ -37,5 +35,6 @@ import { UserController } from "./controller/user.controller";
     AdminUserServices,
     UserMessageRepository,
   ],
+  exports: [UserService],
 })
 export class UserModule {}

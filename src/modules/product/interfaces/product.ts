@@ -16,3 +16,8 @@ export type UpdateProductProps = Omit<CreateProductProps, "type"> & {
 };
 
 export interface FilterProductProps extends FilterProductDTO {}
+
+export interface GetSpecificProductsProps {
+  type: PRODUCT_TYPES;
+  page: number;
+}

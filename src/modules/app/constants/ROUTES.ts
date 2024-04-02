@@ -13,17 +13,18 @@ export const ROUTES = {
   },
   CLOTHE: {
     ROOT: "clothe",
-    CREATE: "create",
-    UPDATE: "update/:id",
-    REMOVE: "remove/:id",
-    FILTER: "filter",
   },
   MEDICINE: {
     ROOT: "medicine",
+  },
+  SECTION: {
     CREATE: "create",
     UPDATE: "update/:id",
     REMOVE: "remove/:id",
     FILTER: "filter",
+    TRENDING: "trending",
+    NEW: "new",
+    POPULAR: "popular",
   },
   ORDER: {
     ROOT: "order",

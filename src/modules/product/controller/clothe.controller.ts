@@ -11,20 +11,29 @@ import {
   CreateClothe,
   DeleteClothe,
   FilterClothes,
+  GetNewProducts,
+  GetTopFavoriteProducts,
+  GetTrendingProducts,
   UpdateClothe,
 } from "../use-cases";
+import { GetSpecificProductsDTO, RespProductDTO } from "../dto/product";
+import { ProductServices } from "../services/product/product.services";
+import { PRODUCT_TYPES } from "../constants";
 
 @Controller(ROUTES.CLOTHE.ROOT)
 export class ClotheController {
-  constructor(private readonly clotheServices: ClotheServices) {}
+  constructor(
+    private readonly clotheServices: ClotheServices,
+    private readonly productServices: ProductServices,
+  ) {}
 
-  @Post(ROUTES.CLOTHE.CREATE)
+  @Post(ROUTES.SECTION.CREATE)
   async create(@Body() dto: CreateClotheDTO): Promise<void> {
     const useCase = new CreateClothe(this.clotheServices);
     await useCase.execute(dto);
   }
 
-  @Put(ROUTES.CLOTHE.UPDATE)
+  @Put(ROUTES.SECTION.UPDATE)
   async update(
     @Param("id") id: string,
     @Body() dto: UpdateClotheDTO,
@@ -33,15 +42,37 @@ export class ClotheController {
     await useCase.execute({ id: id, dto: dto });
   }
 
-  @Delete(ROUTES.CLOTHE.REMOVE)
+  @Delete(ROUTES.SECTION.REMOVE)
   async delete(@Param("id") id: string): Promise<void> {
     const useCase = new DeleteClothe(this.clotheServices);
     await useCase.execute(id);
   }
 
-  @Post(ROUTES.CLOTHE.FILTER)
+  @Post(ROUTES.SECTION.FILTER)
   async filter(@Body() dto: FilterClotheDTO): Promise<Array<RespClotheDTO>> {
     const useCase = new FilterClothes(this.clotheServices);
     return await useCase.execute(dto);
+  }
+
+  @Post(ROUTES.SECTION.TRENDING)
+  async trending(
+    @Body() dto: GetSpecificProductsDTO,
+  ): Promise<RespProductDTO[]> {
+    const useCase = new GetTrendingProducts(this.productServices);
+    return await useCase.execute(dto, PRODUCT_TYPES.CLOTHE);
+  }
+
+  @Post(ROUTES.SECTION.NEW)
+  async news(@Body() dto: GetSpecificProductsDTO): Promise<RespProductDTO[]> {
+    const useCase = new GetNewProducts(this.productServices);
+    return await useCase.execute(dto, PRODUCT_TYPES.CLOTHE);
+  }
+
+  @Post(ROUTES.SECTION.POPULAR)
+  async populars(
+    @Body() dto: GetSpecificProductsDTO,
+  ): Promise<RespProductDTO[]> {
+    const useCase = new GetTopFavoriteProducts(this.productServices);
+    return await useCase.execute(dto, PRODUCT_TYPES.CLOTHE);
   }
 }

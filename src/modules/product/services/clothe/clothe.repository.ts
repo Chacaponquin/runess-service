@@ -12,7 +12,7 @@ import {
 import { MediaServices } from "@modules/media/services/media.service";
 import { PRODUCT_TYPES } from "../../constants";
 import { ClotheMatch } from "@modules/product/infrastructure/mongo/domain";
-import { FilterPage } from "@modules/product/domain/filter-page";
+import { FilterPage } from "@modules/product/domain/page";
 
 @Injectable()
 export class ClotheRepository {

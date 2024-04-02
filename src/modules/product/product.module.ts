@@ -16,6 +16,7 @@ import { MedicineController } from "./controller/medicine.controller";
 import { MedicineRepository } from "./services/medicine/medicine.repository";
 import { MediaModule } from "@modules/media/media.module";
 import { MedicineServices } from "./services/medicine/medicine.services";
+import { UserModule } from "@modules/user/user.module";
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { MedicineServices } from "./services/medicine/medicine.services";
       { name: DB_MOELS.MEDICINES, useFactory: () => MedicineSchema },
     ]),
     MediaModule,
+    UserModule,
   ],
   providers: [
     ProductRepository,

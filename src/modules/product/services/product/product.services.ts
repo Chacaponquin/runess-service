@@ -3,6 +3,7 @@ import { ProductRepository } from "./product.repository";
 import { Product } from "../../domain";
 import {
   CreateProductProps,
+  GetSpecificProductsProps,
   UpdateProductProps,
 } from "../../interfaces/product";
 import { MediaServices } from "@modules/media/services/media.service";
@@ -36,6 +37,18 @@ export class ProductServices {
         await this.mediaServices.deleteImage(image.id);
       }
     }
+  }
+
+  populars(props: GetSpecificProductsProps): Promise<Product[]> {
+    return this.repository.populars(props);
+  }
+
+  trending(props: GetSpecificProductsProps): Promise<Product[]> {
+    return this.repository.trending(props);
+  }
+
+  news(props: GetSpecificProductsProps): Promise<Product[]> {
+    return this.repository.news(props);
   }
 
   update(props: UpdateProductProps) {

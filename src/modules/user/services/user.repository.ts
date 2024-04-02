@@ -33,6 +33,29 @@ export class UserRepository {
   }
 
   private map(user: IUser): User {
-    return new User({ id: user.id, password: user.password });
+    return new User({
+      id: user.id,
+      password: user.password,
+      favorites: user.favorites.map((i) => i.toString()),
+    });
+  }
+
+  async countProductFavorites(id: string): Promise<number> {
+    let sum = 0;
+
+    const all = await this.all();
+
+    all.forEach((u) => {
+      if (u.favorites.includes(id)) {
+        sum++;
+      }
+    });
+
+    return sum;
+  }
+
+  private async all(): Promise<User[]> {
+    const data = await this.model.find();
+    return data.map((u) => this.map(u));
   }
 }
