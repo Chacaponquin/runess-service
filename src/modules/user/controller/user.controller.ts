@@ -17,7 +17,7 @@ import {
 } from "../use-cases";
 import { CreateContactMessageDTO } from "../dto/message";
 import { UserService } from "../services/user.service";
-import { UserGuard } from "../guards/user.guard";
+import { UserAccessGuard, UserRefreshGuard } from "../guards/user.guard";
 import {
   AddProductToFavoriteDTO,
   DeleteProductFromFavoriteDTO,
@@ -35,7 +35,7 @@ export class UserController {
     await useCase.execute(dto);
   }
 
-  @UseGuards(UserGuard)
+  @UseGuards(UserAccessGuard)
   @Get(ROUTES.USER.ORDERS)
   async orders() {
     const useCase = new GetUserOrders();
@@ -43,7 +43,7 @@ export class UserController {
     return orders;
   }
 
-  @UseGuards(UserGuard)
+  @UseGuards(UserAccessGuard)
   @Put(ROUTES.USER.ADD_PRODUCT_FAVORITE)
   async add(
     @Body() dto: AddProductToFavoriteDTO,
@@ -53,7 +53,7 @@ export class UserController {
     await useCase.execute({ productId: dto.productId, user: req.user });
   }
 
-  @UseGuards(UserGuard)
+  @UseGuards(UserAccessGuard)
   @Put(ROUTES.USER.DELETE_PRODUCT_FAVORITE)
   async delete(
     @Body() dto: DeleteProductFromFavoriteDTO,
@@ -63,7 +63,7 @@ export class UserController {
     await useCase.execute({ dto: dto, user: req.user });
   }
 
-  @UseGuards(UserGuard)
+  @UseGuards(UserRefreshGuard)
   @Get(ROUTES.USER.REFRESH)
   async refresh(@Req() req: UserRequest): Promise<RespCurrentUserDTO> {
     const useCase = new GetUserByToken(this.userServices);

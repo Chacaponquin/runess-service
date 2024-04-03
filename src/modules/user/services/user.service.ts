@@ -65,10 +65,16 @@ export class UserService implements OnModuleInit {
     });
   }
 
-  async verifyAccessToken(token: string): Promise<CurrentUser | null> {
+  async verifyToken(
+    token: string,
+    type: "refresh" | "access",
+  ): Promise<CurrentUser | null> {
     try {
       const payload: JwtPayload = this.jwtService.verify(token, {
-        secret: this.envServices.ACCESS_SECRET_WORD,
+        secret:
+          type === "access"
+            ? this.envServices.ACCESS_SECRET_WORD
+            : this.envServices.REFRESH_SECRET_WORD,
       });
 
       const user = await this.findById(payload.userId);
