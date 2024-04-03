@@ -5,8 +5,12 @@ import { ConfigService } from "@nestjs/config";
 export class EnvService {
   constructor(private readonly configService: ConfigService) {}
 
-  get SECRET_WORD() {
-    return this.configService.get<string>("SECRET_WORD");
+  get ACCESS_SECRET_WORD() {
+    return this.configService.get<string>("ACCESS_SECRET_WORD");
+  }
+
+  get REFRESH_SECRET_WORD() {
+    return this.configService.get<string>("REFRESH_SECRET_WORD");
   }
 
   get MONGO_URI() {

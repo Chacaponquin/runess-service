@@ -12,7 +12,6 @@ import {
 import { MediaServices } from "@modules/media/services/media.service";
 import { UserService } from "@modules/user/services/user.service";
 import { SepecificProductsPage } from "@modules/product/domain/page";
-import { PRODUCT_TYPES } from "@modules/product/constants";
 
 @Injectable()
 export class ProductRepository {
@@ -24,28 +23,19 @@ export class ProductRepository {
   ) {}
 
   async findById(id: string): Promise<Product | null> {
-    try {
-      const found = await this.model.findById(id);
-
-      if (found) {
-        return this.map(found);
-      } else {
-        return null;
-      }
-    } catch (error) {
-      return null;
-    }
+    const found = await this.model.findById(id);
+    return found ? this.map(found) : null;
   }
 
   async populars(props: GetSpecificProductsProps): Promise<Product[]> {
     interface PopularProduct {
-      product: Product;
+      product: IProduct;
       count: number;
     }
 
     const page = new SepecificProductsPage(props.page);
 
-    const result = await this.filterByType(props.type);
+    const result = await this.model.find({ type: props.type });
 
     const order: PopularProduct[] = [];
 
@@ -57,7 +47,7 @@ export class ProductRepository {
     return order
       .sort((a, b) => b.count - a.count)
       .slice(page.init, page.final)
-      .map((p) => p.product);
+      .map((p) => this.map(p.product));
   }
 
   async news(props: GetSpecificProductsProps): Promise<Product[]> {
@@ -74,7 +64,10 @@ export class ProductRepository {
   async trending(props: GetSpecificProductsProps): Promise<Product[]> {
     const page = new SepecificProductsPage(props.page);
 
-    const result = await this.model.find().skip(page.init).limit(page.final);
+    const result = await this.model
+      .find({ type: props.type })
+      .skip(page.init)
+      .limit(page.final);
 
     return result.map((r) => this.map(r));
   }
@@ -98,11 +91,6 @@ export class ProductRepository {
     await newProduct.save();
 
     return this.map(newProduct);
-  }
-
-  async filterByType(type: PRODUCT_TYPES) {
-    const result = await this.model.find({ type: type });
-    return result.map((r) => this.map(r));
   }
 
   async all(): Promise<Product[]> {

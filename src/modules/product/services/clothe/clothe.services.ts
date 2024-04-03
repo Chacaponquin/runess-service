@@ -80,6 +80,10 @@ export class ClotheServices implements OnModuleInit {
     return this.clotheRepository.similars(id);
   }
 
+  findByProductId(id: string): Promise<Clothe | null> {
+    return this.clotheRepository.findByProductId(id);
+  }
+
   async createClothe(dto: CreateClotheDTO): Promise<string> {
     const product = await this.productServices.createProduct({
       images: dto.images,

@@ -16,8 +16,6 @@ import { AdminUserRepository } from "./services/admin.repository";
 import { AdminUserServices } from "./services/admin.service";
 import { UserMessageRepository } from "./services/message.repository";
 import { UserController } from "./controller/user.controller";
-import { EnvService } from "@modules/app/modules/env/services/env.service";
-import { EnvModule } from "@modules/app/modules/env/env.module";
 
 @Module({
   imports: [
@@ -27,11 +25,11 @@ import { EnvModule } from "@modules/app/modules/env/env.module";
       { name: DB_MOELS.USER_MESSAGES, useFactory: () => UserMessageSchema },
     ]),
     JwtModule.registerAsync({
-      imports: [EnvModule],
-      useFactory(envServices: EnvService) {
-        return { global: true, secret: envServices.SECRET_WORD };
+      imports: [],
+      useFactory() {
+        return {};
       },
-      inject: [EnvService],
+      inject: [],
     }),
   ],
   controllers: [AuthController, AdminController, UserController],

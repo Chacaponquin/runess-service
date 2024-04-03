@@ -93,7 +93,12 @@ export class MedicineRepository {
   }
 
   async findById(id: string): Promise<Medicine | null> {
-    const found = await this.model.findOne({ _id: id }).populate("product");
+    const found = await this.model.findById(id).populate("product");
+    return found ? this.map(found) : null;
+  }
+
+  async findByProductId(id: string): Promise<Medicine | null> {
+    const found = await this.model.findOne({ product: id }).populate("product");
     return found ? this.map(found) : null;
   }
 

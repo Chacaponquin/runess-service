@@ -136,6 +136,11 @@ export class ClotheRepository {
     return found ? this.map(found) : null;
   }
 
+  async findByProductId(id: string): Promise<Clothe | null> {
+    const found = await this.model.findOne({ product: id }).populate("product");
+    return found ? this.map(found) : null;
+  }
+
   private map(clothe: IClothe): Clothe {
     return new Clothe({
       id: clothe._id,

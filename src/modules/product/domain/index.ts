@@ -1,3 +1,4 @@
+import { chaca, schemas } from "chaca";
 import { PRODUCT_TYPES } from "../constants";
 import { RespClotheDTO } from "../dto/clothe";
 import { RespMedicineDTO } from "../dto/medicine";
@@ -53,9 +54,18 @@ export class Product {
   }
 
   response(): RespProductDTO {
+    const schema = chaca.schema<ProductImage>({
+      id: schemas.id.uuid(),
+      name: schemas.lorem.words(),
+      source: schemas.image.food(),
+      size: schemas.dataType.int({ min: 1000, max: 50000 }),
+    });
+
     return {
       id: this.id,
-      images: this.images,
+      images: schema.generate(
+        schemas.dataType.int().getValue({ min: 1, max: 10 }),
+      ),
       name: this.name,
       price: this.price,
       provider: this.provider,

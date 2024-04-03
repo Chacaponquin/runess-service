@@ -76,6 +76,10 @@ export class MedicineServices implements OnModuleInit {
     return this.repository.filter(props);
   }
 
+  findByProductId(id: string): Promise<Medicine | null> {
+    return this.repository.findByProductId(id);
+  }
+
   async createMedicine(dto: CreateMedicineDTO): Promise<string> {
     const product = await this.productServices.createProduct({
       images: dto.images,

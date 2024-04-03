@@ -22,7 +22,7 @@ export class UserGuard implements CanActivate {
     }
 
     try {
-      const user = await this.userServices.verifyToken(token);
+      const user = await this.userServices.verifyAccessToken(token);
 
       if (user) {
         request.user = user;

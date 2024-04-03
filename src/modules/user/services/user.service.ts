@@ -29,6 +29,7 @@ export class UserService {
     const payload: JwtPayload = { userId: userId };
     return this.jwtService.sign(payload, {
       expiresIn: this.envServices.ACCESS_TOKEN_EXPIRES_TIME,
+      secret: this.envServices.ACCESS_SECRET_WORD,
     });
   }
 
@@ -36,12 +37,16 @@ export class UserService {
     const payload: JwtPayload = { userId: userId };
     return this.jwtService.sign(payload, {
       expiresIn: this.envServices.REFRESH_TOKEN_EXPIRES_TIME,
+      secret: this.envServices.REFRESH_SECRET_WORD,
     });
   }
 
-  async verifyToken(token: string): Promise<CurrentUser | null> {
+  async verifyAccessToken(token: string): Promise<CurrentUser | null> {
     try {
-      const payload: JwtPayload = this.jwtService.verify(token);
+      const payload: JwtPayload = this.jwtService.verify(token, {
+        secret: this.envServices.ACCESS_SECRET_WORD,
+      });
+
       const user = await this.findById(payload.userId);
 
       if (user) {
