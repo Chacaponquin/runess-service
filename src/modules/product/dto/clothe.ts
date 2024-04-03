@@ -31,3 +31,8 @@ export type RespClotheDTO = Omit<RespProductDTO, "type"> & {
   colors: string[];
   sizes: string[];
 };
+
+export interface ProductColorDTO {
+  name: string;
+  hex: string;
+}

@@ -19,6 +19,7 @@ import { FindMedicineById } from "./medicine/FindMedicineById";
 import { GetMedicines } from "./medicine/GetMedicines";
 import { GetMedicineSimilars } from "./medicine/GetMedicineSimilars";
 import { GetClotheSimilars } from "./clothe/GetClotheSimilars";
+import { GetAllClotheColors } from "./clothe/GetAllClotheColors";
 
 export {
   GetNewProducts,
@@ -40,4 +41,5 @@ export {
   GetMedicines,
   GetMedicineSimilars,
   GetClotheSimilars,
+  GetAllClotheColors,
 };

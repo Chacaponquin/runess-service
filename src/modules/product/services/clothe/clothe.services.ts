@@ -8,7 +8,7 @@ import {
 import { ProductServices } from "../product/product.services";
 import { chaca, schemas } from "chaca";
 import { PRODUCT_TYPES } from "../../constants";
-import { Clothe } from "../../domain";
+import { Clothe, ProductColor } from "../../domain";
 import { GetProps } from "@modules/product/interfaces/product";
 
 @Injectable()
@@ -119,5 +119,9 @@ export class ClotheServices implements OnModuleInit {
 
   allSizes(): Promise<string[]> {
     return this.clotheRepository.allSizes();
+  }
+
+  allColors(): ProductColor[] {
+    return this.productServices.colors.values;
   }
 }

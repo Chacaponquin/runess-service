@@ -120,7 +120,7 @@ export class ClotheRepository {
   }
 
   async similars(id: string): Promise<Clothe[]> {
-    const found = await this.findById(id);
+    const found = await this.model.findOne({ product: id });
 
     if (found) {
       const result = await this.model.find().limit(6).populate("product");

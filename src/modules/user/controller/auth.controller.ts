@@ -16,7 +16,7 @@ export class AuthController {
 
   @Post(ROUTES.AUTH.SIGN_UP)
   async signUp(@Body() dto: CreateUserDTO): Promise<RespCurrentUserDTO> {
-    const useCase = new CreateUser(this.userServices, this.cryptServices);
+    const useCase = new CreateUser(this.userServices);
     const token = await useCase.execute(dto);
     return token;
   }

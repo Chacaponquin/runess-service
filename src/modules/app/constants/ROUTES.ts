@@ -14,6 +14,7 @@ export const ROUTES = {
   CLOTHE: {
     ROOT: "clothe",
     ALL_SIZES: "all-sizes",
+    ALL_COLORS: "all-colors",
   },
   MEDICINE: {
     ROOT: "medicine",

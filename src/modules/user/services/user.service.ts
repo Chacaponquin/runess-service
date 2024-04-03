@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, OnModuleInit } from "@nestjs/common";
 import { CurrentUser, User, UserMessage } from "../domain";
 import { CreateUserDTO } from "../dto/create";
 import { UserRepository } from "./user.repository";
@@ -11,18 +11,42 @@ import {
   DeleteProductFromFavoriteProps,
 } from "../interfaces/user";
 import { EnvService } from "@modules/app/modules/env/services/env.service";
+import { CryptServices } from "@shared/services/crypt.service";
+import { RepeatUserError } from "../exceptions";
 
 @Injectable()
-export class UserService {
+export class UserService implements OnModuleInit {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly jwtService: JwtService,
     private readonly messageRepository: UserMessageRepository,
     private readonly envServices: EnvService,
+    private readonly cryptServices: CryptServices,
   ) {}
 
-  createUser(dto: CreateUserDTO): Promise<User> {
-    return this.userRepository.create(dto);
+  async onModuleInit() {
+    const email = "hectorangel2001@gmail.com";
+    const found = await this.findUserByEmail(email);
+
+    if (!found) {
+      await this.createUser({
+        email: email,
+        firstName: "Hector",
+        lastName: "Gomez Robaina",
+        password: "12345678",
+      });
+    }
+  }
+
+  async createUser(dto: CreateUserDTO): Promise<User> {
+    const found = await this.findUserByEmail(dto.email);
+
+    if (!found) {
+      const newPassword = await this.cryptServices.hash(dto.password);
+      return this.userRepository.create({ ...dto, password: newPassword });
+    } else {
+      throw new RepeatUserError();
+    }
   }
 
   generateAccessToken(userId: string): string {

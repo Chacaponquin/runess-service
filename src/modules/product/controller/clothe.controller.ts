@@ -12,6 +12,7 @@ import { ClotheServices } from "../services/clothe/clothe.services";
 import {
   CreateClotheDTO,
   FilterClotheDTO,
+  ProductColorDTO,
   RespClotheDTO,
   UpdateClotheDTO,
 } from "../dto/clothe";
@@ -20,6 +21,7 @@ import {
   DeleteClothe,
   FilterClothes,
   FindClotheById,
+  GetAllClotheColors,
   GetAllClothesSizes,
   GetClothes,
   GetClotheSimilars,
@@ -98,6 +100,12 @@ export class ClotheController {
   async allSizes(): Promise<string[]> {
     const useCase = new GetAllClothesSizes(this.clotheServices);
     return await useCase.execute();
+  }
+
+  @Get(ROUTES.CLOTHE.ALL_COLORS)
+  allColors(): ProductColorDTO[] {
+    const useCase = new GetAllClotheColors(this.clotheServices);
+    return useCase.execute();
   }
 
   @Get(ROUTES.SECTION.FIND)

@@ -18,10 +18,10 @@ export class SignInAdmin {
     const foundByEmail = await this.adminServices.findByUsername(dto.username);
 
     if (foundByEmail) {
-      const validate = this.cryptServices.compare(
-        foundByEmail.password,
-        dto.password,
-      );
+      const validate = await this.cryptServices.compare({
+        value: foundByEmail.password,
+        hashed: dto.password,
+      });
 
       if (validate) {
         const token = this.userServices.generateAccessToken(foundByEmail.id);

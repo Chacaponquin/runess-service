@@ -14,10 +14,10 @@ export class LoginUser {
     const found = await this.userServices.findUserByEmail(dto.email);
 
     if (found) {
-      const equal = await this.cryptServices.compare(
-        found.password,
-        dto.password,
-      );
+      const equal = await this.cryptServices.compare({
+        value: dto.password,
+        hashed: found.password,
+      });
 
       if (equal) {
         const accessToken = this.userServices.generateAccessToken(found.id);

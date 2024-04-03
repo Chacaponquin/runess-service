@@ -56,7 +56,7 @@ export class MedicineRepository {
   }
 
   async similars(id: string): Promise<Medicine[]> {
-    const found = await this.findById(id);
+    const found = await this.model.findOne({product: id});
 
     if (found) {
       const result = await this.model.find().limit(6).populate("product");

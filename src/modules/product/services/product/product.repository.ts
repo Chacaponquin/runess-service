@@ -38,7 +38,6 @@ export class ProductRepository {
     const result = await this.model.find({ type: props.type });
 
     const order: PopularProduct[] = [];
-
     for (const product of result) {
       const count = await this.userServices.countProductFavorites(product.id);
       order.push({ count: count, product: product });
