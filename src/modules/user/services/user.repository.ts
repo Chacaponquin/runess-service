@@ -48,6 +48,7 @@ export class UserRepository {
       favorites: user.favorites.map((i) => i.toString()),
       firstName: user.firstName,
       lastName: user.lastName,
+      email: user.email,
     });
   }
 

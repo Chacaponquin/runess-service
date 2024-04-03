@@ -10,6 +10,7 @@ import {
   AddProductToFavoriteProps,
   DeleteProductFromFavoriteProps,
 } from "../interfaces/user";
+import { EnvService } from "@modules/app/modules/env/services/env.service";
 
 @Injectable()
 export class UserService {
@@ -17,6 +18,7 @@ export class UserService {
     private readonly userRepository: UserRepository,
     private readonly jwtService: JwtService,
     private readonly messageRepository: UserMessageRepository,
+    private readonly envServices: EnvService,
   ) {}
 
   createUser(dto: CreateUserDTO): Promise<User> {
@@ -25,7 +27,16 @@ export class UserService {
 
   generateAccessToken(userId: string): string {
     const payload: JwtPayload = { userId: userId };
-    return this.jwtService.sign(payload);
+    return this.jwtService.sign(payload, {
+      expiresIn: this.envServices.ACCESS_TOKEN_EXPIRES_TIME,
+    });
+  }
+
+  genearteRefreshToken(userId: string): string {
+    const payload: JwtPayload = { userId: userId };
+    return this.jwtService.sign(payload, {
+      expiresIn: this.envServices.REFRESH_TOKEN_EXPIRES_TIME,
+    });
   }
 
   async verifyToken(token: string): Promise<CurrentUser | null> {

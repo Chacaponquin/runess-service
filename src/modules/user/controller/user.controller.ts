@@ -12,6 +12,7 @@ import {
   AddProductToFavorites,
   CreateContactMessage,
   DeleteProductFromFavorites,
+  GetUserByToken,
   GetUserOrders,
 } from "../use-cases";
 import { CreateContactMessageDTO } from "../dto/message";
@@ -20,6 +21,7 @@ import { UserGuard } from "../guards/user.guard";
 import {
   AddProductToFavoriteDTO,
   DeleteProductFromFavoriteDTO,
+  RespCurrentUserDTO,
 } from "../dto/user";
 import { UserRequest } from "../interfaces/request";
 
@@ -59,5 +61,12 @@ export class UserController {
   ): Promise<void> {
     const useCase = new DeleteProductFromFavorites(this.userServices);
     await useCase.execute({ dto: dto, user: req.user });
+  }
+
+  @UseGuards(UserGuard)
+  @Get(ROUTES.USER.REFRESH)
+  async refresh(@Req() req: UserRequest): Promise<RespCurrentUserDTO> {
+    const useCase = new GetUserByToken(this.userServices);
+    return await useCase.execute(req.user);
   }
 }

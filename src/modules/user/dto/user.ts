@@ -1,22 +1,17 @@
 import { IsNotEmpty, IsString } from "class-validator";
 
-export interface SendUserDTO {
+export interface RespCurrentUserDTO {
   id: string;
   firstName: string;
   lastName: string;
   email: string;
   favorites: Array<string>;
+  accessToken: string;
+  refreshToken: string;
 }
 
 export interface SendUserOrderDTO {
   amount: number;
-}
-
-export interface RespLoginUserDTO {
-  id: string;
-  firstName: string;
-  lastName: string;
-  accessToken: string;
 }
 
 export class AddProductToFavoriteDTO {

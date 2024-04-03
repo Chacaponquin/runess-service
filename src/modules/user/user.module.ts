@@ -16,8 +16,8 @@ import { AdminUserRepository } from "./services/admin.repository";
 import { AdminUserServices } from "./services/admin.service";
 import { UserMessageRepository } from "./services/message.repository";
 import { UserController } from "./controller/user.controller";
-import { EnvModule } from "@modules/app/modules/env/env.module";
 import { EnvService } from "@modules/app/modules/env/services/env.service";
+import { EnvModule } from "@modules/app/modules/env/env.module";
 
 @Module({
   imports: [
@@ -29,14 +29,10 @@ import { EnvService } from "@modules/app/modules/env/services/env.service";
     JwtModule.registerAsync({
       imports: [EnvModule],
       useFactory(envServices: EnvService) {
-        return {
-          global: true,
-          secret: envServices.SECRET_WORD,
-          signOptions: { expiresIn: envServices.TOKEN_EXPIRES_TIME },
-        };
+        return { global: true, secret: envServices.SECRET_WORD };
       },
+      inject: [EnvService],
     }),
-    ,
   ],
   controllers: [AuthController, AdminController, UserController],
   providers: [

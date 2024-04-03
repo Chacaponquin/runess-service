@@ -9,8 +9,16 @@ export class EnvService {
     return this.configService.get<string>("SECRET_WORD");
   }
 
-  get TOKEN_EXPIRES_TIME() {
-    return this.configService.get<string>("TOKEN_EXPIRES");
+  get MONGO_URI() {
+    return this.configService.get<string>("MONGO_URI");
+  }
+
+  get ACCESS_TOKEN_EXPIRES_TIME() {
+    return this.configService.get<string>("ACCESS_TOKEN_EXPIRES");
+  }
+
+  get REFRESH_TOKEN_EXPIRES_TIME() {
+    return this.configService.get<string>("REFRESH_TOKEN_EXPIRES");
   }
 
   get MAIL_HOST() {

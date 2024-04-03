@@ -43,6 +43,8 @@ export const ROUTES = {
     ORDERS: "orders",
     ADD_PRODUCT_FAVORITE: "add-product-favorite",
     DELETE_PRODUCT_FAVORITE: "delete-product-favorite",
+    GET_USER_BY_TOKEN: "user-token",
+    REFRESH: "user-token",
   },
   ADMIN_USER: {
     ROOT: "admin",

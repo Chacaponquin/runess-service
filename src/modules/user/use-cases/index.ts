@@ -6,6 +6,7 @@ import { GetUserFavorites } from "./user/GetUserFavorites";
 import { GetUserOrders } from "./user/GetUserOrders";
 import { LoginUser } from "./auth/LoginUser";
 import { SignInAdmin } from "./admin/SignInAdmin";
+import { GetUserByToken } from "./user/GetUserByToken";
 
 export {
   CreateUser,
@@ -16,4 +17,5 @@ export {
   CreateContactMessage,
   GetUserOrders,
   SignInAdmin,
+  GetUserByToken,
 };

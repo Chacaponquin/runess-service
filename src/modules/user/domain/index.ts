@@ -4,6 +4,7 @@ interface UserProps {
   firstName: string;
   lastName: string;
   favorites: Array<string>;
+  email: string;
 }
 
 interface AdminUserProps {
@@ -40,13 +41,22 @@ export class User {
   readonly favorites: Array<string>;
   readonly firstName: string;
   readonly lastName: string;
+  readonly email: string;
 
-  constructor({ id, password, favorites, firstName, lastName }: UserProps) {
+  constructor({
+    id,
+    password,
+    favorites,
+    firstName,
+    lastName,
+    email,
+  }: UserProps) {
     this.id = id;
     this.password = password;
     this.favorites = favorites;
     this.firstName = firstName;
     this.lastName = lastName;
+    this.email = email;
   }
 }
 
