@@ -16,6 +16,7 @@ import { AdminUserRepository } from "./services/admin.repository";
 import { AdminUserServices } from "./services/admin.service";
 import { UserMessageRepository } from "./services/message.repository";
 import { UserController } from "./controller/user.controller";
+import { ProductModule } from "@modules/product/product.module";
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { UserController } from "./controller/user.controller";
       },
       inject: [],
     }),
+    ProductModule,
   ],
   controllers: [AuthController, AdminController, UserController],
   providers: [

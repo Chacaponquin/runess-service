@@ -1,8 +1,8 @@
 import { ROUTES } from "@modules/app/constants";
 import { Body, Controller, Post } from "@nestjs/common";
-import { CreateOrder } from "../use-cases";
+import { CreateOrder, GetOrders } from "../use-cases";
 import { OrderService } from "../services/order-service";
-import { CreateOrderDTO } from "../dto/create";
+import { CreateOrderDTO, GetDTO, RespOrderDTO } from "../dto/order";
 import { PaymentService } from "@modules/payment/services/payment-service";
 import { ClientServices } from "@modules/client/services/client.service";
 import { ProductServices } from "@modules/product/services/product/product.services";
@@ -25,6 +25,12 @@ export class OrderController {
       this.productServices,
     );
 
+    return await useCase.execute(dto);
+  }
+
+  @Post(ROUTES.ORDER.GET)
+  async get(@Body() dto: GetDTO): Promise<RespOrderDTO[]> {
+    const useCase = new GetOrders(this.orderServices);
     return await useCase.execute(dto);
   }
 }

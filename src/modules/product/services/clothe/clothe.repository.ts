@@ -12,8 +12,9 @@ import {
 import { MediaServices } from "@modules/media/services/media.service";
 import { PRODUCT_TYPES } from "../../constants";
 import { ClotheMatch } from "@modules/product/infrastructure/mongo/domain";
-import { FilterPage, GetPage } from "@modules/product/domain/page";
+import { FilterPage } from "@modules/product/domain/page";
 import { GetProps } from "@modules/product/interfaces/product";
+import { GetPage } from "@shared/domain/page";
 
 @Injectable()
 export class ClotheRepository {

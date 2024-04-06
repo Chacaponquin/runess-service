@@ -33,6 +33,7 @@ export const ROUTES = {
   ORDER: {
     ROOT: "order",
     CREATE: "create",
+    GET: "",
   },
   MEDIA: {
     ROOT: "media",

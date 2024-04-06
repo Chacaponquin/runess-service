@@ -42,6 +42,9 @@ class Product {
   @Prop({ default: 0, min: 0, type: mongoose.SchemaTypes.Number })
   views: number;
 
+  @Prop({ default: 0, type: mongoose.SchemaTypes.Number, min: 0 })
+  favoritesCount: number;
+
   @Prop({ type: mongoose.SchemaTypes.Array, default: [] })
   tags: Array<string>;
 

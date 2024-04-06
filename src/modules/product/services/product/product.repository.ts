@@ -10,7 +10,6 @@ import {
   UpdateProductProps,
 } from "../../interfaces/product";
 import { MediaServices } from "@modules/media/services/media.service";
-import { UserService } from "@modules/user/services/user.service";
 import { SepecificProductsPage } from "@modules/product/domain/page";
 
 @Injectable()
@@ -19,7 +18,6 @@ export class ProductRepository {
     @InjectModel(DB_MOELS.PRODUCTS)
     private readonly model: Model<IProduct>,
     private readonly mediaServices: MediaServices,
-    private readonly userServices: UserService,
   ) {}
 
   async findById(id: string): Promise<Product | null> {
@@ -27,30 +25,41 @@ export class ProductRepository {
     return found ? this.map(found) : null;
   }
 
-  async populars(props: GetSpecificProductsProps): Promise<Product[]> {
-    interface PopularProduct {
-      product: IProduct;
-      count: number;
-    }
+  async sumFavoritesCount(id: string): Promise<void> {
+    const found = await this.model.findById(id);
 
+    if (found) {
+      await this.model.findByIdAndUpdate(id, {
+        favoritesCount: found.favoritesCount + 1,
+      });
+    }
+  }
+
+  async minusFavoritesCount(id: string): Promise<void> {
+    const found = await this.model.findById(id);
+
+    if (found) {
+      await this.model.findByIdAndUpdate(id, {
+        favoritesCount: found.favoritesCount - 1,
+      });
+    }
+  }
+
+  async populars(props: GetSpecificProductsProps): Promise<Product[]> {
     const page = new SepecificProductsPage(props.page);
 
-    const result = await this.model.find({ type: props.type });
+    const result = await this.model
+      .find({ type: props.type })
+      .sort({ favoritesCount: -1 })
+      .skip(page.init)
+      .limit(page.final);
 
-    const order: PopularProduct[] = [];
-    for (const product of result) {
-      const count = await this.userServices.countProductFavorites(product.id);
-      order.push({ count: count, product: product });
-    }
-
-    return order
-      .sort((a, b) => b.count - a.count)
-      .slice(page.init, page.final)
-      .map((p) => this.map(p.product));
+    return result.map((r) => this.map(r));
   }
 
   async news(props: GetSpecificProductsProps): Promise<Product[]> {
     const page = new SepecificProductsPage(props.page);
+
     const result = await this.model
       .find({ type: props.type })
       .sort({ createdAt: -1 })

@@ -24,10 +24,14 @@ import {
   RespCurrentUserDTO,
 } from "../dto/user";
 import { UserRequest } from "../interfaces/request";
+import { ProductServices } from "@modules/product/services/product/product.services";
 
 @Controller(ROUTES.USER.ROOT)
 export class UserController {
-  constructor(private readonly userServices: UserService) {}
+  constructor(
+    private readonly userServices: UserService,
+    private readonly productServices: ProductServices,
+  ) {}
 
   @Post(ROUTES.USER.CONTACT)
   async contact(@Body() dto: CreateContactMessageDTO) {
@@ -49,7 +53,11 @@ export class UserController {
     @Body() dto: AddProductToFavoriteDTO,
     @Req() req: UserRequest,
   ): Promise<void> {
-    const useCase = new AddProductToFavorites(this.userServices);
+    const useCase = new AddProductToFavorites(
+      this.userServices,
+      this.productServices,
+    );
+
     await useCase.execute({ productId: dto.productId, user: req.user });
   }
 
@@ -59,7 +67,11 @@ export class UserController {
     @Body() dto: DeleteProductFromFavoriteDTO,
     @Req() req: UserRequest,
   ): Promise<void> {
-    const useCase = new DeleteProductFromFavorites(this.userServices);
+    const useCase = new DeleteProductFromFavorites(
+      this.userServices,
+      this.productServices,
+    );
+
     await useCase.execute({ dto: dto, user: req.user });
   }
 

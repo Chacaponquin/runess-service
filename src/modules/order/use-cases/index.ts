@@ -1,3 +1,4 @@
 import { CreateOrder } from "./CreateOrder";
+import { GetOrders } from "./GetOrders";
 
-export { CreateOrder };
+export { CreateOrder, GetOrders };

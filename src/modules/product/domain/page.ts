@@ -1,17 +1,4 @@
-interface Props {
-  page: number;
-  step: number;
-}
-
-export class Page {
-  readonly init: number;
-  readonly final: number;
-
-  constructor({ page, step }: Props) {
-    this.init = (page - 1) * step;
-    this.final = (page - 1) * step + step;
-  }
-}
+import { Page } from "@shared/domain/page";
 
 export class FilterPage extends Page {
   constructor(page: number) {
@@ -22,11 +9,5 @@ export class FilterPage extends Page {
 export class SepecificProductsPage extends Page {
   constructor(page: number) {
     super({ page: page, step: 4 });
-  }
-}
-
-export class GetPage extends Page {
-  constructor(page: number) {
-    super({ page: page, step: 20 });
   }
 }

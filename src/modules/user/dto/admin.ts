@@ -12,7 +12,7 @@ export class SignInAdminDTO {
 
 export interface ResponseSignInAdminDTO {
   id: string;
-  token: string;
+  accessToken: string;
   email: string;
   username: string;
 }

@@ -7,9 +7,10 @@ import { Medicine } from "../../domain";
 import { MediaServices } from "@modules/media/services/media.service";
 import { PRODUCT_TYPES } from "../../constants";
 import { FilterMedicineProps } from "@modules/product/interfaces/medicine";
-import { FilterPage, GetPage } from "@modules/product/domain/page";
+import { FilterPage } from "@modules/product/domain/page";
 import { MedicineMatch } from "@modules/product/infrastructure/mongo/domain";
 import { GetProps } from "@modules/product/interfaces/product";
+import { GetPage } from "@shared/domain/page";
 
 @Injectable()
 export class MedicineRepository {
@@ -56,7 +57,7 @@ export class MedicineRepository {
   }
 
   async similars(id: string): Promise<Medicine[]> {
-    const found = await this.model.findOne({product: id});
+    const found = await this.model.findOne({ product: id });
 
     if (found) {
       const result = await this.model.find().limit(6).populate("product");

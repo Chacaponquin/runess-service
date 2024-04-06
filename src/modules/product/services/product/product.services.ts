@@ -51,7 +51,15 @@ export class ProductServices {
     return this.repository.news(props);
   }
 
-  update(props: UpdateProductProps) {
+  update(props: UpdateProductProps): Promise<void> {
     return this.repository.update(props);
+  }
+
+  sumFavoritesCount(id: string): Promise<void> {
+    return this.repository.sumFavoritesCount(id);
+  }
+
+  minusFavoritesCount(id: string): Promise<void> {
+    return this.repository.minusFavoritesCount(id);
   }
 }
