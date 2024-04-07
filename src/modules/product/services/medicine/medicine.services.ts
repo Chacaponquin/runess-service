@@ -45,11 +45,8 @@ export class MedicineServices implements OnModuleInit {
   }
 
   async delete(id: string): Promise<void> {
-    const clothe = await this.repository.remove(id);
-
-    if (clothe) {
-      await this.productServices.deleteOne(clothe.productId);
-    }
+    await this.repository.remove(id);
+    await this.productServices.deleteOne(id);
   }
 
   get(props: GetProps): Promise<Medicine[]> {
@@ -74,10 +71,6 @@ export class MedicineServices implements OnModuleInit {
 
   filter(props: FilterMedicinesDTO): Promise<Medicine[]> {
     return this.repository.filter(props);
-  }
-
-  findByProductId(id: string): Promise<Medicine | null> {
-    return this.repository.findByProductId(id);
   }
 
   async createMedicine(dto: CreateMedicineDTO): Promise<string> {

@@ -40,14 +40,8 @@ export class ClotheRepository {
     return newClothe.id;
   }
 
-  async remove(id: string): Promise<Clothe | null> {
-    const found = await this.model.findByIdAndDelete(id);
-
-    if (found) {
-      return this.map(found);
-    } else {
-      return null;
-    }
+  async remove(id: string): Promise<void> {
+    await this.model.findOneAndDelete({ product: id });
   }
 
   async filter(props: FilterClotheProps): Promise<Clothe[]> {
@@ -133,7 +127,7 @@ export class ClotheRepository {
   }
 
   async findById(id: string): Promise<Clothe | null> {
-    const found = await this.model.findOne({ _id: id }).populate("product");
+    const found = await this.model.findOne({ product: id }).populate("product");
     return found ? this.map(found) : null;
   }
 
@@ -144,8 +138,7 @@ export class ClotheRepository {
 
   private map(clothe: IClothe): Clothe {
     return new Clothe({
-      id: clothe._id,
-      productId: clothe.product._id,
+      id: clothe.product._id,
       images: clothe.product.images.map((i) => ({
         name: i.name,
         size: i.size,

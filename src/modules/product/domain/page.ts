@@ -2,7 +2,7 @@ import { Page } from "@shared/domain/page";
 
 export class FilterPage extends Page {
   constructor(page: number) {
-    super({ page: page, step: 25 });
+    super({ page: page, step: 28 });
   }
 }
 

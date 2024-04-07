@@ -6,7 +6,7 @@ export class FindMedicineById {
   constructor(private readonly services: MedicineServices) {}
 
   async execute(id: string): Promise<RespMedicineDTO> {
-    const found = await this.services.findByProductId(id);
+    const found = await this.services.findById(id);
 
     if (found) {
       return found.send();

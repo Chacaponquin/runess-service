@@ -117,7 +117,7 @@ export class ProductRepository {
     });
   }
 
-  private map(product: IProduct): Product {
+  map(product: IProduct): Product {
     return new Product({
       id: product.id,
       name: product.name,

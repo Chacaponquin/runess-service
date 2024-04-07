@@ -12,7 +12,10 @@ import {
   AddProductToFavorites,
   CreateContactMessage,
   DeleteProductFromFavorites,
+  GetFavoriteCount,
+  GetOrdersCount,
   GetUserByToken,
+  GetUserFavorites,
   GetUserOrders,
 } from "../use-cases";
 import { CreateContactMessageDTO } from "../dto/message";
@@ -25,6 +28,7 @@ import {
 } from "../dto/user";
 import { UserRequest } from "../interfaces/request";
 import { ProductServices } from "@modules/product/services/product/product.services";
+import { RespProductDTO } from "@modules/product/dto/product";
 
 @Controller(ROUTES.USER.ROOT)
 export class UserController {
@@ -45,6 +49,27 @@ export class UserController {
     const useCase = new GetUserOrders();
     const orders = await useCase.execute();
     return orders;
+  }
+
+  @UseGuards(UserAccessGuard)
+  @Get(ROUTES.USER.FAVORITES)
+  async favorites(@Req() req: UserRequest): Promise<RespProductDTO[]> {
+    const useCase = new GetUserFavorites(this.userServices);
+    return await useCase.execute(req.user.id);
+  }
+
+  @UseGuards(UserAccessGuard)
+  @Get(ROUTES.USER.FAVORITES_COUNT)
+  async favoriteCount(@Req() req: UserRequest): Promise<number> {
+    const useCase = new GetFavoriteCount(this.userServices);
+    return await useCase.execute(req.user.id);
+  }
+
+  @UseGuards(UserAccessGuard)
+  @Get(ROUTES.USER.ORDERS_COUNT)
+  async orderCount(@Req() req: UserRequest): Promise<number> {
+    const useCase = new GetOrdersCount(this.userServices);
+    return await useCase.execute(req.user.id);
   }
 
   @UseGuards(UserAccessGuard)

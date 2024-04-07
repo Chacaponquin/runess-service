@@ -10,7 +10,7 @@ export interface RespCurrentUserDTO {
   refreshToken: string;
 }
 
-export interface SendUserOrderDTO {
+export interface RespUserOrderDTO {
   amount: number;
 }
 

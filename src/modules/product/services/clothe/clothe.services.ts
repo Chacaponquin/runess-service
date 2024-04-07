@@ -49,11 +49,8 @@ export class ClotheServices implements OnModuleInit {
   }
 
   async delete(id: string): Promise<void> {
-    const clothe = await this.clotheRepository.remove(id);
-
-    if (clothe) {
-      await this.productServices.deleteOne(clothe.productId);
-    }
+    await this.clotheRepository.remove(id);
+    await this.productServices.deleteOne(id);
   }
 
   async update(id: string, props: UpdateClotheDTO) {
@@ -67,7 +64,7 @@ export class ClotheServices implements OnModuleInit {
       await this.productServices.update({
         ...props,
         originalPrice: props.price,
-        id: clothe.productId,
+        id: clothe.id,
       });
     }
   }
@@ -78,10 +75,6 @@ export class ClotheServices implements OnModuleInit {
 
   similars(id: string): Promise<Clothe[]> {
     return this.clotheRepository.similars(id);
-  }
-
-  findByProductId(id: string): Promise<Clothe | null> {
-    return this.clotheRepository.findByProductId(id);
   }
 
   async createClothe(dto: CreateClotheDTO): Promise<string> {

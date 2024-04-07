@@ -1,5 +1,5 @@
 import { Injectable, OnModuleInit } from "@nestjs/common";
-import { CurrentUser, User, UserMessage } from "../domain";
+import { CurrentUser, UserMessage, UserSimple } from "../domain";
 import { CreateUserDTO } from "../dto/create";
 import { UserRepository } from "./user.repository";
 import { JwtService } from "@nestjs/jwt";
@@ -13,6 +13,7 @@ import {
 import { EnvService } from "@modules/app/modules/env/services/env.service";
 import { CryptServices } from "@shared/services/crypt.service";
 import { RepeatUserError } from "../exceptions";
+import { Product } from "@modules/product/domain";
 
 @Injectable()
 export class UserService implements OnModuleInit {
@@ -38,7 +39,7 @@ export class UserService implements OnModuleInit {
     }
   }
 
-  async createUser(dto: CreateUserDTO): Promise<User> {
+  async createUser(dto: CreateUserDTO): Promise<UserSimple> {
     const found = await this.findUserByEmail(dto.email);
 
     if (!found) {
@@ -89,11 +90,11 @@ export class UserService implements OnModuleInit {
     }
   }
 
-  findById(id: string): Promise<User | null> {
+  findById(id: string): Promise<UserSimple | null> {
     return this.userRepository.findById(id);
   }
 
-  findUserByEmail(email: string): Promise<User | null> {
+  findUserByEmail(email: string): Promise<UserSimple | null> {
     return this.userRepository.findByEmail(email);
   }
 
@@ -101,17 +102,23 @@ export class UserService implements OnModuleInit {
     return this.messageRepository.create(props);
   }
 
-  countProductFavorites(id: string): Promise<number> {
-    return this.userRepository.countProductFavorites(id);
+  addProductToFavorite(props: AddProductToFavoriteProps): Promise<void> {
+    return this.userRepository.addProductToFavorite(props);
   }
 
-  async addProductToFavorite(props: AddProductToFavoriteProps): Promise<void> {
-    await this.userRepository.addProductToFavorite(props);
-  }
-
-  async deleteProductFromFavorite(
+  deleteProductFromFavorite(
     props: DeleteProductFromFavoriteProps,
   ): Promise<void> {
-    await this.userRepository.deleteProductFromFavorite(props);
+    return this.userRepository.deleteProductFromFavorite(props);
+  }
+
+  async getFavoriteProducts(id: string): Promise<Product[]> {
+    const populated = await this.userRepository.findByIdPopulated(id);
+
+    if (populated) {
+      return populated.favorites;
+    } else {
+      return [];
+    }
   }
 }

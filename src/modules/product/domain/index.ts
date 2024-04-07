@@ -78,17 +78,14 @@ export class Product {
 interface ClotheProps extends ProductProps {
   colors: string[];
   sizes: string[];
-  productId: string;
 }
 
 export class Clothe extends Product {
-  readonly productId: string;
   readonly colors: string[];
   readonly sizes: string[];
 
-  constructor({ productId, colors, sizes, ...rest }: ClotheProps) {
+  constructor({ colors, sizes, ...rest }: ClotheProps) {
     super(rest);
-    this.productId = productId;
     this.colors = colors;
     this.sizes = sizes;
   }
@@ -103,11 +100,8 @@ export class Clothe extends Product {
 }
 
 export class Medicine extends Product {
-  readonly productId: string;
-
-  constructor(props: ProductProps & { productId: string }) {
+  constructor(props: ProductProps) {
     super(props);
-    this.productId = props.id;
   }
 
   send(): RespMedicineDTO {

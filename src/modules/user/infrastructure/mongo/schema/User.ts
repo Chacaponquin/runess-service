@@ -1,6 +1,7 @@
 import { IProduct } from "@modules/product/infrastructure/mongo/schema";
 import { UserEmail } from "@modules/user/value-object";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { DB_MOELS } from "@shared/constants";
 import mongoose, { Document } from "mongoose";
 
 @Schema({
@@ -46,7 +47,12 @@ class User {
   @Prop({ type: mongoose.SchemaTypes.String, default: null })
   country: string | null;
 
-  @Prop({ type: mongoose.SchemaTypes.Array, default: [], required: false })
+  @Prop({
+    type: mongoose.SchemaTypes.Array,
+    default: [],
+    required: false,
+    ref: DB_MOELS.PRODUCTS,
+  })
   favorites: Array<mongoose.Types.ObjectId>;
 }
 
@@ -54,6 +60,6 @@ export const UserSchema = SchemaFactory.createForClass(User);
 
 export type IUser = User & Document;
 
-export type PopulatedUser = User & {
+export type IUserPopulated = Omit<IUser, "favorites"> & {
   favorites: Array<IProduct>;
 };

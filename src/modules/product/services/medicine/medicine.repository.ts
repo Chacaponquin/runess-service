@@ -34,14 +34,8 @@ export class MedicineRepository {
     return newMedicine.id;
   }
 
-  async remove(id: string): Promise<Medicine | null> {
-    const found = await this.model.findByIdAndDelete(id);
-
-    if (found) {
-      return this.map(found);
-    } else {
-      return null;
-    }
+  async remove(id: string): Promise<void> {
+    await this.model.findOneAndDelete({ product: id });
   }
 
   async get(props: GetProps): Promise<Medicine[]> {
@@ -71,30 +65,34 @@ export class MedicineRepository {
   async filter(props: FilterMedicineProps): Promise<Medicine[]> {
     const page = new FilterPage(props.page);
 
-    const result = await this.model.aggregate<IMedicine>([
-      {
-        $lookup: {
-          from: DB_MOELS.PRODUCTS,
-          localField: "product",
-          foreignField: "_id",
-          as: "product",
+    const result = await this.model
+      .aggregate<IMedicine>([
+        {
+          $lookup: {
+            from: DB_MOELS.PRODUCTS,
+            localField: "product",
+            foreignField: "_id",
+            as: "product",
+          },
         },
-      },
-      {
-        $unwind: "$product",
-      },
-      {
-        $match: new MedicineMatch(props).match,
-      },
-      { $skip: page.init },
-      { $limit: page.final },
-    ]);
+        {
+          $unwind: "$product",
+        },
+        {
+          $match: new MedicineMatch(props).match,
+        },
+        { $skip: page.init },
+        { $limit: page.final },
+      ])
+      .exec();
 
-    return result.map((c) => this.map(c));
+    const all = result.map((c) => this.map(c));
+
+    return all;
   }
 
   async findById(id: string): Promise<Medicine | null> {
-    const found = await this.model.findById(id).populate("product");
+    const found = await this.model.findOne({ product: id }).populate("product");
     return found ? this.map(found) : null;
   }
 
@@ -105,13 +103,12 @@ export class MedicineRepository {
 
   private map(medicine: IMedicine): Medicine {
     return new Medicine({
-      id: medicine.id,
-      productId: medicine.product.id,
+      id: medicine.product._id,
       images: medicine.product.images.map((i) => ({
         name: i.name,
         size: i.size,
         source: this.mediaServices.getImageUrl(i.aws_key),
-        id: i.id,
+        id: i._id,
       })),
       name: medicine.product.name,
       price: medicine.product.price,

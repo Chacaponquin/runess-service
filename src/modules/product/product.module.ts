@@ -34,7 +34,12 @@ import { MedicineServices } from "./services/medicine/medicine.services";
     MedicineRepository,
     MedicineServices,
   ],
-  exports: [ProductServices, ClotheServices, MedicineServices],
+  exports: [
+    ProductServices,
+    ClotheServices,
+    MedicineServices,
+    ProductRepository,
+  ],
   controllers: [ClotheController, ProductController, MedicineController],
 })
 export class ProductModule {}
