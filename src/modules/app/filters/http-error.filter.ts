@@ -4,8 +4,8 @@ import {
   HttpException,
   HttpStatus,
   Logger,
-  Catch
-} from '@nestjs/common';
+  Catch,
+} from "@nestjs/common";
 
 @Catch()
 export class RunessExceptionFilter implements ExceptionFilter {
@@ -30,7 +30,7 @@ export class RunessExceptionFilter implements ExceptionFilter {
       time: new Date().toISOString(),
       path: request.url,
       error: msg,
-      status: status
+      status: status,
     });
   }
 }

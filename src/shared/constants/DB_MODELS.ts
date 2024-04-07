@@ -9,4 +9,5 @@ export enum DB_MOELS {
   MEDICINES = "medicines",
   IMAGES = "images",
   ADMIN_USERS = "admin_user",
+  USER_MESSAGES = "user_message",
 }

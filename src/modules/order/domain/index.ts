@@ -1,3 +1,5 @@
+import { RespOrderDTO } from "../dto/order";
+
 interface Props {
   id: string;
   orders: Array<OrderItem>;
@@ -18,5 +20,9 @@ export class Order {
     this.orders = orders;
     this.id = id;
     this.note = note;
+  }
+
+  send(): RespOrderDTO {
+    return { amount: 10, id: this.id };
   }
 }

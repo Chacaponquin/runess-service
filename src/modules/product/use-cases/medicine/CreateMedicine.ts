@@ -1,5 +1,5 @@
 import { CreateMedicineDTO } from "@modules/product/dto/medicine";
-import { MedicineServices } from "@modules/product/services/medicine.services";
+import { MedicineServices } from "@modules/product/services/medicine/medicine.services";
 
 export class CreateMedicine {
   constructor(private readonly medicineServices: MedicineServices) {}

@@ -1,5 +1,5 @@
 import { ROUTES } from "@modules/app/constants";
-import { Body, Controller } from "@nestjs/common";
+import { Body, Controller, Post } from "@nestjs/common";
 import { ResponseSignInAdminDTO, SignInAdminDTO } from "../dto/admin";
 import { SignInAdmin } from "../use-cases";
 import { AdminUserServices } from "../services/admin.service";
@@ -14,6 +14,7 @@ export class AdminController {
     private readonly userServices: UserService,
   ) {}
 
+  @Post(ROUTES.ADMIN_USER.SIGN_IN)
   async signIn(@Body() dto: SignInAdminDTO): Promise<ResponseSignInAdminDTO> {
     const useCase = new SignInAdmin(
       this.services,

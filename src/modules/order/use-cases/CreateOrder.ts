@@ -1,8 +1,8 @@
 import { PaymentService } from "@modules/payment/services/payment-service";
-import { CreateOrderDTO, OrderItemDTO } from "../dto/create";
+import { CreateOrderDTO, OrderItemDTO } from "../dto/order";
 import { OrderService } from "../services/order-service";
 import { ClientServices } from "@modules/client/services/client.service";
-import { ProductServices } from "@modules/product/services/product.services";
+import { ProductServices } from "@modules/product/services/product/product.services";
 import { OrderMissingProductException } from "../exceptions";
 
 export class CreateOrder {
@@ -30,7 +30,7 @@ export class CreateOrder {
     return "";
   }
 
-  async _calculateAmount(orders: Array<OrderItemDTO>): Promise<number> {
+  private async _calculateAmount(orders: Array<OrderItemDTO>): Promise<number> {
     let amount = 0;
 
     for (const order of orders) {

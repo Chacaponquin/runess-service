@@ -6,16 +6,16 @@ import {
   ProductSchema,
 } from "./infrastructure/mongo/schema";
 import { MongooseModule } from "@nestjs/mongoose";
-import { ProductRepository } from "./services/product.repository";
-import { ProductServices } from "./services/product.services";
-import { ClotheServices } from "./services/clothe.services";
-import { ClotheRepository } from "./services/clothe.repository";
+import { ProductRepository } from "./services/product/product.repository";
+import { ProductServices } from "./services/product/product.services";
+import { ClotheServices } from "./services/clothe/clothe.services";
+import { ClotheRepository } from "./services/clothe/clothe.repository";
 import { ClotheController } from "./controller/clothe.controller";
 import { ProductController } from "./controller/product.controller";
 import { MedicineController } from "./controller/medicine.controller";
-import { MedicineRepository } from "./services/medicine.repository";
+import { MedicineRepository } from "./services/medicine/medicine.repository";
 import { MediaModule } from "@modules/media/media.module";
-import { MedicineServices } from "./services/medicine.services";
+import { MedicineServices } from "./services/medicine/medicine.services";
 
 @Module({
   imports: [
@@ -34,7 +34,12 @@ import { MedicineServices } from "./services/medicine.services";
     MedicineRepository,
     MedicineServices,
   ],
-  exports: [ProductServices, ClotheServices],
+  exports: [
+    ProductServices,
+    ClotheServices,
+    MedicineServices,
+    ProductRepository,
+  ],
   controllers: [ClotheController, ProductController, MedicineController],
 })
 export class ProductModule {}

@@ -15,22 +15,22 @@ export class SignInAdmin {
   ) {}
 
   async execute(dto: SignInAdminDTO): Promise<ResponseSignInAdminDTO> {
-    const foundByEmail = await this.adminServices.findByUsername(dto.username);
+    const found = await this.adminServices.findByUsername(dto.username);
 
-    if (foundByEmail) {
-      const validate = this.cryptServices.compare(
-        foundByEmail.password,
-        dto.password,
-      );
+    if (found) {
+      const validate = await this.cryptServices.compare({
+        value: dto.password,
+        hashed: found.password,
+      });
 
       if (validate) {
-        const token = this.userServices.generateAccessToken(foundByEmail.id);
+        const token = this.userServices.generateAccessToken(found.id);
 
         return {
-          email: foundByEmail.email,
-          id: foundByEmail.id,
-          token: token,
-          username: foundByEmail.username,
+          email: found.email,
+          id: found.id,
+          accessToken: token,
+          username: found.username,
         };
       }
     }

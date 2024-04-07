@@ -1,6 +1,6 @@
-import { SendProductDTO } from "./send";
+import { RespProductDTO } from "./product";
 
 export interface ResultSearchDTO {
-  product: Array<SendProductDTO>;
+  product: Array<RespProductDTO>;
   page: number;
 }

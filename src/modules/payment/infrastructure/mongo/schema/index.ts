@@ -17,7 +17,7 @@ class ClientPayment {
   @Prop({ ref: DB_MOELS.CLIENT, type: mongoose.Types.ObjectId, required: true })
   client: IClient;
 
-  @Prop({ type: mongoose.SchemaTypes.Decimal128, required: true })
+  @Prop({ type: mongoose.SchemaTypes.Number, required: true })
   amount: number;
 
   @Prop({ type: mongoose.SchemaTypes.Date, required: true })
