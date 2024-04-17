@@ -13,7 +13,7 @@ import { MediaServices } from "@modules/media/services/media.service";
 import { PRODUCT_TYPES } from "../../constants";
 import { ClotheMatch } from "@modules/product/infrastructure/mongo/domain";
 import { FilterPage } from "@modules/product/domain/page";
-import { GetProps } from "@modules/product/interfaces/product";
+import { GetProps, SearchResult } from "@modules/product/interfaces/product";
 import { GetPage } from "@shared/domain/page";
 import { ComparationService } from "@shared/services/comparation.service";
 import { SimilarProduct } from "@modules/product/domain/similar";
@@ -60,7 +60,7 @@ export class ClotheRepository {
     return all;
   }
 
-  async filter(props: FilterClotheProps): Promise<Clothe[]> {
+  async filter(props: FilterClotheProps): Promise<SearchResult> {
     const page = new FilterPage(props.page);
 
     const result = await this.model
@@ -79,12 +79,11 @@ export class ClotheRepository {
         {
           $match: new ClotheMatch(props).match,
         },
-        { $skip: page.init },
-        { $limit: page.final },
       ])
       .exec();
 
-    const data = result
+    const products = result
+      .slice(page.init, page.final)
       .map((c) => {
         return new SimilarProduct({
           product: c,
@@ -94,7 +93,7 @@ export class ClotheRepository {
       .sort((a, b) => b.similarity - a.similarity)
       .map((c) => this.map(c.product));
 
-    return data;
+    return { result: products, totalPages: page.total(result.length) };
   }
 
   async update(props: UpdateClotheProps): Promise<Clothe | null> {

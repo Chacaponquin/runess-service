@@ -1,14 +1,15 @@
-import {
-  FilterMedicinesDTO,
-  RespMedicineDTO,
-} from "@modules/product/dto/medicine";
-import { MedicineServices } from "@modules/product/services/medicine/medicine.services";
+import { FilterMedicinesDTO } from "@modules/product/dto/medicine";
+import { SearchResultDTO } from "@modules/product/dto/product";
+import { MedicineRepository } from "@modules/product/services/medicine/medicine.repository";
 
 export class FilterMedicines {
-  constructor(private readonly services: MedicineServices) {}
+  constructor(private readonly respotiory: MedicineRepository) {}
 
-  async execute(dto: FilterMedicinesDTO): Promise<RespMedicineDTO[]> {
-    const result = await this.services.filter(dto);
-    return result.map((r) => r.send());
+  async execute(dto: FilterMedicinesDTO): Promise<SearchResultDTO> {
+    const result = await this.respotiory.filter(dto);
+    return {
+      result: result.result.map((r) => r.response()),
+      totalPages: result.totalPages,
+    };
   }
 }

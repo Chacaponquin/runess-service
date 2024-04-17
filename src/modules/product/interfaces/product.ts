@@ -1,4 +1,5 @@
 import { PRODUCT_TYPES } from "../constants";
+import { Product } from "../domain";
 import { FilterProductDTO } from "../dto/product";
 
 export interface CreateProductProps {
@@ -24,4 +25,9 @@ export interface GetSpecificProductsProps {
 
 export interface GetProps {
   page: number;
+}
+
+export interface SearchResult {
+  result: Product[];
+  totalPages: number;
 }

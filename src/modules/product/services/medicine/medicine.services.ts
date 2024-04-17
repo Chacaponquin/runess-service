@@ -1,11 +1,7 @@
 import { Injectable, OnModuleInit } from "@nestjs/common";
 import { ProductServices } from "../product/product.services";
 import { MedicineRepository } from "./medicine.repository";
-import {
-  CreateMedicineDTO,
-  FilterMedicinesDTO,
-  UpdateMedicineDTO,
-} from "../../dto/medicine";
+import { CreateMedicineDTO, UpdateMedicineDTO } from "../../dto/medicine";
 import { chaca, schemas } from "chaca";
 import { PRODUCT_TYPES } from "../../constants";
 import { Medicine } from "../../domain";
@@ -67,10 +63,6 @@ export class MedicineServices implements OnModuleInit {
 
   similars(id: string): Promise<Medicine[]> {
     return this.repository.similars(id);
-  }
-
-  filter(props: FilterMedicinesDTO): Promise<Medicine[]> {
-    return this.repository.filter(props);
   }
 
   async createMedicine(dto: CreateMedicineDTO): Promise<string> {

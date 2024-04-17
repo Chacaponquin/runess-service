@@ -9,7 +9,7 @@ import { PRODUCT_TYPES } from "../../constants";
 import { FilterMedicineProps } from "@modules/product/interfaces/medicine";
 import { FilterPage } from "@modules/product/domain/page";
 import { MedicineMatch } from "@modules/product/infrastructure/mongo/domain";
-import { GetProps } from "@modules/product/interfaces/product";
+import { GetProps, SearchResult } from "@modules/product/interfaces/product";
 import { GetPage } from "@shared/domain/page";
 import { ComparationService } from "@shared/services/comparation.service";
 import { SimilarProduct } from "@modules/product/domain/similar";
@@ -78,7 +78,7 @@ export class MedicineRepository {
     }
   }
 
-  async filter(props: FilterMedicineProps): Promise<Medicine[]> {
+  async filter(props: FilterMedicineProps): Promise<SearchResult> {
     const page = new FilterPage(props.page);
 
     const result = await this.model
@@ -97,12 +97,11 @@ export class MedicineRepository {
         {
           $match: new MedicineMatch(props).match,
         },
-        { $skip: page.init },
-        { $limit: page.final },
       ])
       .exec();
 
     const all = result
+      .slice(page.init, page.final)
       .map((c) => {
         return new SimilarProduct({
           product: c,
@@ -112,7 +111,7 @@ export class MedicineRepository {
       .sort((a, b) => b.similarity - a.similarity)
       .map((c) => this.map(c.product));
 
-    return all;
+    return { result: all, totalPages: page.total(result.length) };
   }
 
   async findById(id: string): Promise<Medicine | null> {
