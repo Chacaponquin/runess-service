@@ -22,6 +22,7 @@ import {
   FilterClothes,
   FindClotheById,
   GetAllClotheColors,
+  GetAllClotheProviders,
   GetAllClothesSizes,
   GetClothes,
   GetClotheSimilars,
@@ -33,12 +34,14 @@ import {
 import { GetDTO, GetSpecificProductsDTO, RespProductDTO } from "../dto/product";
 import { ProductServices } from "../services/product/product.services";
 import { PRODUCT_TYPES } from "../constants";
+import { ClotheRepository } from "../services/clothe/clothe.repository";
 
 @Controller(ROUTES.CLOTHE.ROOT)
 export class ClotheController {
   constructor(
     private readonly clotheServices: ClotheServices,
     private readonly productServices: ProductServices,
+    private readonly clotheRepository: ClotheRepository,
   ) {}
 
   @Post(ROUTES.SECTION.CREATE)
@@ -118,5 +121,11 @@ export class ClotheController {
   async similars(@Param("id") id: string): Promise<RespProductDTO[]> {
     const useCase = new GetClotheSimilars(this.clotheServices);
     return await useCase.execute(id);
+  }
+
+  @Get(ROUTES.SECTION.ALL_PROVIDERS)
+  async providers(): Promise<string[]> {
+    const useCase = new GetAllClotheProviders(this.clotheRepository);
+    return await useCase.execute();
   }
 }

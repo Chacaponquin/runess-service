@@ -6,13 +6,13 @@ abstract class ProductMatch {
   match: Record<string, unknown>;
 
   constructor(dto: FilterProductProps) {
-    let final: Record<string, unknown> = {
+    const final: Record<string, unknown> = {
       "product.price": { $gte: dto.minPrice, $lte: dto.maxPrice },
     };
 
-    if (dto.provider !== "") {
+    /* if (dto.provider !== "") {
       final = { ...final, provider: dto.provider };
-    }
+    }*/
 
     this.match = final;
   }

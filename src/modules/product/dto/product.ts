@@ -61,12 +61,18 @@ export class FilterProductDTO {
   @IsString()
   name: string;
 
-  @IsString()
-  provider: string;
+  @IsArray()
+  @IsNotEmpty()
+  @IsString({ each: true })
+  providers: string[];
 
   @IsNumber()
   @Min(1)
   page: number;
+
+  @IsString()
+  @IsNotEmpty()
+  order: string;
 }
 
 export interface RespProductDTO {

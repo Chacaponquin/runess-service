@@ -15,6 +15,8 @@ import { ClotheMatch } from "@modules/product/infrastructure/mongo/domain";
 import { FilterPage } from "@modules/product/domain/page";
 import { GetProps } from "@modules/product/interfaces/product";
 import { GetPage } from "@shared/domain/page";
+import { ComparationService } from "@shared/services/comparation.service";
+import { SimilarProduct } from "@modules/product/domain/similar";
 
 @Injectable()
 export class ClotheRepository {
@@ -22,6 +24,7 @@ export class ClotheRepository {
     @InjectModel(DB_MOELS.CLOTHE)
     private readonly model: Model<IClothe>,
     private readonly mediaServices: MediaServices,
+    private readonly compareServices: ComparationService,
   ) {}
 
   length(): Promise<number> {
@@ -42,6 +45,19 @@ export class ClotheRepository {
 
   async remove(id: string): Promise<void> {
     await this.model.findOneAndDelete({ product: id });
+  }
+
+  async allProviders(): Promise<string[]> {
+    const all = [] as string[];
+    const result = await this.model.find().populate("product");
+
+    for (const r of result) {
+      const provider = r.product.provider;
+
+      if (!all.includes(provider)) all.push(provider);
+    }
+
+    return all;
   }
 
   async filter(props: FilterClotheProps): Promise<Clothe[]> {
@@ -68,7 +84,15 @@ export class ClotheRepository {
       ])
       .exec();
 
-    const data = result.map((c) => this.map(c));
+    const data = result
+      .map((c) => {
+        return new SimilarProduct({
+          product: c,
+          similarity: this.compareServices.compare(props.name, c.product.name),
+        });
+      })
+      .sort((a, b) => b.similarity - a.similarity)
+      .map((c) => this.map(c.product));
 
     return data;
   }
