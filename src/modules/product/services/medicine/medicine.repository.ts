@@ -11,6 +11,8 @@ import { FilterPage } from "@modules/product/domain/page";
 import { MedicineMatch } from "@modules/product/infrastructure/mongo/domain";
 import { GetProps } from "@modules/product/interfaces/product";
 import { GetPage } from "@shared/domain/page";
+import { ComparationService } from "@shared/services/comparation.service";
+import { SimilarProduct } from "@modules/product/domain/similar";
 
 @Injectable()
 export class MedicineRepository {
@@ -18,6 +20,7 @@ export class MedicineRepository {
     @InjectModel(DB_MOELS.MEDICINES)
     private readonly model: Model<IMedicine>,
     private readonly mediaServices: MediaServices,
+    private readonly compareServices: ComparationService,
   ) {}
 
   length(): Promise<number> {
@@ -36,6 +39,19 @@ export class MedicineRepository {
 
   async remove(id: string): Promise<void> {
     await this.model.findOneAndDelete({ product: id });
+  }
+
+  async allProviders(): Promise<string[]> {
+    const all = [] as string[];
+    const result = await this.model.find().populate("product");
+
+    for (const r of result) {
+      const provider = r.product.provider;
+
+      if (!all.includes(provider)) all.push(provider);
+    }
+
+    return all;
   }
 
   async get(props: GetProps): Promise<Medicine[]> {
@@ -86,7 +102,15 @@ export class MedicineRepository {
       ])
       .exec();
 
-    const all = result.map((c) => this.map(c));
+    const all = result
+      .map((c) => {
+        return new SimilarProduct({
+          product: c,
+          similarity: this.compareServices.compare(props.name, c.product.name),
+        });
+      })
+      .sort((a, b) => b.similarity - a.similarity)
+      .map((c) => this.map(c.product));
 
     return all;
   }

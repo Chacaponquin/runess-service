@@ -29,6 +29,7 @@ export const ROUTES = {
     POPULAR: "popular",
     FIND: "find/:id",
     SIMILARS: "similars/:id",
+    ALL_PROVIDERS: "all-providers",
   },
   ORDER: {
     ROOT: "order",

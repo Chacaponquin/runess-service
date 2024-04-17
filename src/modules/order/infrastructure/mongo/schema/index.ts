@@ -27,7 +27,7 @@ export class Order {
   @Prop({ type: mongoose.SchemaTypes.Array, required: true })
   orders: Array<OrderItem>;
 
-  @Prop({ type: mongoose.SchemaTypes.String, default: "" })
+  @Prop({ type: mongoose.SchemaTypes.String, default: "", required: false })
   note: string;
 }
 

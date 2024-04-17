@@ -19,6 +19,7 @@ import {
   DeleteMedicine,
   FilterMedicines,
   FindMedicineById,
+  GetAllMedicineProviders,
   GetMedicines,
   GetMedicineSimilars,
   GetNewProducts,
@@ -30,12 +31,14 @@ import { MedicineServices } from "../services/medicine/medicine.services";
 import { GetDTO, GetSpecificProductsDTO, RespProductDTO } from "../dto/product";
 import { ProductServices } from "../services/product/product.services";
 import { PRODUCT_TYPES } from "../constants";
+import { MedicineRepository } from "../services/medicine/medicine.repository";
 
 @Controller(ROUTES.MEDICINE.ROOT)
 export class MedicineController {
   constructor(
     private readonly services: MedicineServices,
     private readonly productServices: ProductServices,
+    private readonly repository: MedicineRepository,
   ) {}
 
   @Post(ROUTES.SECTION.CREATE)
@@ -103,5 +106,11 @@ export class MedicineController {
   async similars(@Param("id") id: string): Promise<RespProductDTO[]> {
     const useCase = new GetMedicineSimilars(this.services);
     return await useCase.execute(id);
+  }
+
+  @Get(ROUTES.SECTION.ALL_PROVIDERS)
+  async providers(): Promise<string[]> {
+    const useCase = new GetAllMedicineProviders(this.repository);
+    return await useCase.execute();
   }
 }

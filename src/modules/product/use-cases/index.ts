@@ -20,6 +20,8 @@ import { GetMedicines } from "./medicine/GetMedicines";
 import { GetMedicineSimilars } from "./medicine/GetMedicineSimilars";
 import { GetClotheSimilars } from "./clothe/GetClotheSimilars";
 import { GetAllClotheColors } from "./clothe/GetAllClotheColors";
+import { GetAllClotheProviders } from "./clothe/GetAllClotheProviders";
+import { GetAllMedicineProviders } from "./medicine/GetAllMedicineProviders";
 
 export {
   GetNewProducts,
@@ -42,4 +44,6 @@ export {
   GetMedicineSimilars,
   GetClotheSimilars,
   GetAllClotheColors,
+  GetAllClotheProviders,
+  GetAllMedicineProviders,
 };
