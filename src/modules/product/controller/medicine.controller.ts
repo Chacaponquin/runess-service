@@ -28,7 +28,12 @@ import {
   UpdateMedicine,
 } from "../use-cases";
 import { MedicineServices } from "../services/medicine/medicine.services";
-import { GetDTO, GetSpecificProductsDTO, RespProductDTO } from "../dto/product";
+import {
+  GetDTO,
+  GetSpecificProductsDTO,
+  RespProductDTO,
+  SearchResultDTO,
+} from "../dto/product";
 import { ProductServices } from "../services/product/product.services";
 import { PRODUCT_TYPES } from "../constants";
 import { MedicineRepository } from "../services/medicine/medicine.repository";
@@ -63,8 +68,8 @@ export class MedicineController {
   }
 
   @Post(ROUTES.SECTION.FILTER)
-  async filter(@Body() dto: FilterMedicinesDTO): Promise<RespMedicineDTO[]> {
-    const useCase = new FilterMedicines(this.services);
+  async filter(@Body() dto: FilterMedicinesDTO): Promise<SearchResultDTO> {
+    const useCase = new FilterMedicines(this.repository);
     return await useCase.execute(dto);
   }
 

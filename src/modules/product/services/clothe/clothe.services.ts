@@ -1,10 +1,6 @@
 import { Injectable, OnModuleInit } from "@nestjs/common";
 import { ClotheRepository } from "./clothe.repository";
-import {
-  CreateClotheDTO,
-  FilterClotheDTO,
-  UpdateClotheDTO,
-} from "../../dto/clothe";
+import { CreateClotheDTO, UpdateClotheDTO } from "../../dto/clothe";
 import { ProductServices } from "../product/product.services";
 import { chaca, schemas } from "chaca";
 import { PRODUCT_TYPES } from "../../constants";
@@ -100,10 +96,6 @@ export class ClotheServices implements OnModuleInit {
       this.productServices.deleteOne(product.id);
       throw error;
     }
-  }
-
-  filter(props: FilterClotheDTO): Promise<Clothe[]> {
-    return this.clotheRepository.filter(props);
   }
 
   get(props: GetProps): Promise<Clothe[]> {

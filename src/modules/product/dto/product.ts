@@ -91,3 +91,8 @@ export interface RespProductImageDTO {
   name: string;
   source: string;
 }
+
+export interface SearchResultDTO {
+  totalPages: number;
+  result: RespProductDTO[];
+}

@@ -1,11 +1,15 @@
-import { FilterClotheDTO, RespClotheDTO } from "@modules/product/dto/clothe";
-import { ClotheServices } from "@modules/product/services/clothe/clothe.services";
+import { FilterClotheDTO } from "@modules/product/dto/clothe";
+import { SearchResultDTO } from "@modules/product/dto/product";
+import { ClotheRepository } from "@modules/product/services/clothe/clothe.repository";
 
 export class FilterClothes {
-  constructor(private readonly services: ClotheServices) {}
+  constructor(private readonly repository: ClotheRepository) {}
 
-  async execute(dto: FilterClotheDTO): Promise<RespClotheDTO[]> {
-    const result = await this.services.filter(dto);
-    return result.map((r) => r.send());
+  async execute(dto: FilterClotheDTO): Promise<SearchResultDTO> {
+    const result = await this.repository.filter(dto);
+    return {
+      result: result.result.map((r) => r.response()),
+      totalPages: result.totalPages,
+    };
   }
 }

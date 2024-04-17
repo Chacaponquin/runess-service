@@ -31,7 +31,12 @@ import {
   GetTrendingProducts,
   UpdateClothe,
 } from "../use-cases";
-import { GetDTO, GetSpecificProductsDTO, RespProductDTO } from "../dto/product";
+import {
+  GetDTO,
+  GetSpecificProductsDTO,
+  RespProductDTO,
+  SearchResultDTO,
+} from "../dto/product";
 import { ProductServices } from "../services/product/product.services";
 import { PRODUCT_TYPES } from "../constants";
 import { ClotheRepository } from "../services/clothe/clothe.repository";
@@ -66,8 +71,8 @@ export class ClotheController {
   }
 
   @Post(ROUTES.SECTION.FILTER)
-  async filter(@Body() dto: FilterClotheDTO): Promise<Array<RespClotheDTO>> {
-    const useCase = new FilterClothes(this.clotheServices);
+  async filter(@Body() dto: FilterClotheDTO): Promise<SearchResultDTO> {
+    const useCase = new FilterClothes(this.clotheRepository);
     return await useCase.execute(dto);
   }
 
