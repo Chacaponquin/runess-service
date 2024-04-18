@@ -15,7 +15,7 @@ import {
     MongooseModule.forFeatureAsync([
       { name: DB_MOELS.CLIENT_PAYMENT, useFactory: () => ClientPaymentSchema },
       {
-        name: DB_MOELS.CARD_PAYMENT,
+        name: DB_MOELS.CLIENT_CARD_PAYMENT,
         useFactory: () => ClientCardPaymentSchema,
       },
     ]),

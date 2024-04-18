@@ -26,10 +26,6 @@ export class CreateOrderDTO {
 
   @IsNotEmpty()
   @IsString()
-  address: string;
-
-  @IsNotEmpty()
-  @IsString()
   phone: string;
 
   @IsNotEmpty()
@@ -38,12 +34,14 @@ export class CreateOrderDTO {
 
   @IsArray()
   @ArrayMinSize(1)
-  orders: Array<OrderItemDTO>;
+  orders: OrderItemDTO[];
 
   @IsNotEmpty()
   @IsString()
   userId: string | null;
 
+  @IsString()
+  @IsNotEmpty()
   type: PAYMENT_TYPE;
 }
 
@@ -62,8 +60,8 @@ export type OrderItemDTO =
     };
 
 export interface SaveOrderProps {
-  clientPaymentId: string;
-  orders: Array<{ productId: string; quantity: number }>;
+  orders: OrderItemDTO[];
+  note: string;
 }
 
 export class GetDTO {
@@ -76,4 +74,9 @@ export class GetDTO {
 export interface RespOrderDTO {
   amount: number;
   id: string;
+}
+
+export interface RespCreateOrderDTO {
+  paymentId: string;
+  clientSecret: string;
 }

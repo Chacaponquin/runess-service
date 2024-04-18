@@ -16,8 +16,8 @@ export class OrderRepository {
 
   async create(props: SaveOrderProps): Promise<Order> {
     const order = new this.model({
-      clientPayment: props.clientPaymentId,
       orders: props.orders,
+      note: props.note,
     });
 
     await order.save();
@@ -25,7 +25,7 @@ export class OrderRepository {
     return this.map(order);
   }
 
-  async ordersByUser(userId: string): Promise<Array<Order>> {
+  async ordersByUser(userId: string): Promise<Order[]> {
     const result = await this.model.find().populate("clientPayment");
     return result.map((r) => this.map(r));
   }

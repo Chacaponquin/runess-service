@@ -56,4 +56,8 @@ export class EnvService {
   get AWS_S3_BUCKET() {
     return this.configService.get<string>("S3_BUCKET") as string;
   }
+
+  get STRIPE_API_SECRET_KEY() {
+    return this.configService.get<string>("STRIPE_API_SECRET_KEY");
+  }
 }

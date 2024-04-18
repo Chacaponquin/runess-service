@@ -2,13 +2,7 @@ import mongoose, { Document } from "mongoose";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { IClientPayment } from "@modules/payment/infrastructure/mongo/schema";
 import { DB_MOELS } from "@shared/constants";
-
-export type IOrder = Order & Document;
-
-export interface OrderItem {
-  productId: string;
-  quantity: number;
-}
+import { OrderItemSchema } from "../interfaces";
 
 @Schema({
   timestamps: true,
@@ -16,19 +10,25 @@ export interface OrderItem {
   toJSON: { virtuals: true },
   toObject: { virtuals: true },
 })
-export class Order {
+class Order {
   @Prop({
     type: mongoose.SchemaTypes.ObjectId,
-    required: true,
+    required: false,
+    default: null,
     ref: DB_MOELS.CLIENT_PAYMENT,
   })
-  clientPayment: IClientPayment;
+  clientPayment: mongoose.Types.ObjectId | null;
 
   @Prop({ type: mongoose.SchemaTypes.Array, required: true })
-  orders: Array<OrderItem>;
+  orders: OrderItemSchema[];
 
   @Prop({ type: mongoose.SchemaTypes.String, default: "", required: false })
   note: string;
 }
+
+export type IOrder = Order & Document;
+export type IOrderPopulated = Omit<IOrder, "clientPayment"> & {
+  clientPayment: IClientPayment | null;
+};
 
 export const OrderSchema = SchemaFactory.createForClass(Order);

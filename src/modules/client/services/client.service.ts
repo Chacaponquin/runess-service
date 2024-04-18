@@ -5,9 +5,9 @@ import { ClientRepository } from "./client-repository";
 
 @Injectable()
 export class ClientServices {
-  constructor(private readonly clientRepository: ClientRepository) {}
+  constructor(private readonly repository: ClientRepository) {}
 
   createClient(dto: CreateClientDTO): Promise<Client> {
-    return this.clientRepository.create(dto);
+    return this.repository.create(dto);
   }
 }

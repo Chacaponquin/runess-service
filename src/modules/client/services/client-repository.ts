@@ -24,10 +24,16 @@ export class ClientRepository {
 
     await client.save();
 
-    return this._map(client);
+    return this.map(client);
   }
 
-  private _map(client: IClient): Client {
-    return new Client({ ...client, id: client.id });
+  map(client: IClient): Client {
+    return new Client({
+      id: client.id,
+      email: client.email,
+      firstName: client.firstName,
+      lastName: client.lastName,
+      phone: client.phone,
+    });
   }
 }

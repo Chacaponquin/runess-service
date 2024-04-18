@@ -3,21 +3,18 @@ interface Props {
   firstName: string;
   lastName: string;
   email: string;
-  address: string;
   phone: string;
 }
 
 export class Client {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  address: string;
-  phone: string;
+  readonly id: string;
+  readonly firstName: string;
+  readonly lastName: string;
+  readonly email: string;
+  readonly phone: string;
 
-  constructor({ address, email, firstName, id, lastName, phone }: Props) {
+  constructor({ email, firstName, id, lastName, phone }: Props) {
     this.id = id;
-    this.address = address;
     this.email = email;
     this.firstName = firstName;
     this.lastName = lastName;

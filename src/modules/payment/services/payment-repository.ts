@@ -6,16 +6,16 @@ import {
   IClientCardPayment,
   IClientPayment,
 } from "../infrastructure/mongo/schema";
-import { ClientCardPayment } from "../domain";
-import { CreateCardPaymentDTO } from "../dto/create";
-import { PAYMENT_TYPE } from "../constants";
+import { ClientPayment } from "../domain";
+import { CreatePaymentProps } from "../interfaces";
 
 @Injectable()
 export class PaymentRepository {
   constructor(
     @InjectModel(DB_MOELS.CLIENT_PAYMENT)
     private readonly paymentModel: Model<IClientPayment>,
-    @InjectModel(DB_MOELS.CLIENT_PAYMENT)
+
+    @InjectModel(DB_MOELS.CLIENT_CARD_PAYMENT)
     private readonly cardPaymentModel: Model<IClientCardPayment>,
   ) {}
 
@@ -23,38 +23,27 @@ export class PaymentRepository {
     await this.paymentModel.deleteOne({ id: id });
   }
 
-  async createCardPayment(
-    dto: CreateCardPaymentDTO,
-  ): Promise<ClientCardPayment> {
-    const payment = new this.paymentModel({
-      amount: dto.amount,
-      client: dto.clientId,
-      expiration_date: new Date(),
-      paymentType: PAYMENT_TYPE.CARD,
+  async createPayment({
+    amount,
+    clientId,
+    paymentType,
+  }: CreatePaymentProps): Promise<ClientPayment> {
+    const newPayment = new this.paymentModel({
+      amount: amount,
+      client: clientId,
+      paymentType: paymentType,
     });
 
-    await payment.save();
+    await newPayment.save();
 
-    try {
-      const cardPayment = new this.cardPaymentModel({
-        clientPayment: payment.id,
-      });
-
-      await cardPayment.save();
-
-      return this._mapCard(cardPayment);
-    } catch (error) {
-      await this.deletePayment(payment.id);
-    }
+    return this.map(newPayment);
   }
 
-  private _mapCard(card: IClientCardPayment): ClientCardPayment {
-    return new ClientCardPayment({
-      accountNo: card.accountNo,
-      id: card.id,
-      amount: card.clientPayment.amount,
-      completed: card.clientPayment.completed,
-      provider: card.provider,
+  map(p: IClientPayment): ClientPayment {
+    return new ClientPayment({
+      amount: p.amount,
+      completed: p.completed,
+      id: p.id,
     });
   }
 }
