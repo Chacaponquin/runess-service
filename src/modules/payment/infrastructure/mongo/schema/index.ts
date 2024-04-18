@@ -4,9 +4,6 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { DB_MOELS } from "@shared/constants";
 import mongoose, { Document } from "mongoose";
 
-export type IClientPayment = ClientPayment & Document;
-export type IClientCardPayment = CardPayment & Document;
-
 @Schema({
   timestamps: true,
   autoCreate: true,
@@ -15,15 +12,12 @@ export type IClientCardPayment = CardPayment & Document;
 })
 class ClientPayment {
   @Prop({ ref: DB_MOELS.CLIENT, type: mongoose.Types.ObjectId, required: true })
-  client: IClient;
+  client: mongoose.Types.ObjectId;
 
   @Prop({ type: mongoose.SchemaTypes.Number, required: true })
   amount: number;
 
-  @Prop({ type: mongoose.SchemaTypes.Date, required: true })
-  expiration_date: Date;
-
-  @Prop({ default: false, type: mongoose.SchemaTypes.Boolean })
+  @Prop({ default: false, type: mongoose.SchemaTypes.Boolean, required: false })
   completed: boolean;
 
   @Prop({
@@ -34,20 +28,49 @@ class ClientPayment {
   paymentType: PAYMENT_TYPE;
 }
 
+@Schema({
+  timestamps: true,
+  autoCreate: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true },
+})
 class CardPayment {
   @Prop({
     type: mongoose.SchemaTypes.ObjectId,
     required: true,
     ref: DB_MOELS.CLIENT_PAYMENT,
   })
-  clientPayment: IClientPayment;
+  clientPayment: mongoose.Types.ObjectId;
 
-  @Prop({ type: mongoose.SchemaTypes.String, required: false, default: null })
-  accountNo: string | null;
+  @Prop({ type: mongoose.SchemaTypes.String, required: true })
+  accountNo: string;
 
-  @Prop({ type: mongoose.SchemaTypes.String, required: false, default: null })
-  provider: string | null;
+  @Prop({ type: mongoose.SchemaTypes.String, required: true })
+  provider: string;
+
+  @Prop({ type: mongoose.SchemaTypes.String, required: true })
+  cvc: string;
+
+  @Prop({ type: mongoose.SchemaTypes.Date, required: true })
+  expiration_date: Date;
+
+  @Prop({ type: mongoose.SchemaTypes.String, required: true })
+  zip: string;
+
+  @Prop({ type: mongoose.SchemaTypes.String, required: true })
+  country: string;
 }
+
+export type IClientPayment = ClientPayment & Document;
+export type IClientPaymentPopulated = Omit<IClientPayment, "client"> & {
+  client: IClient;
+};
+
+export type IClientCardPayment = CardPayment & Document;
+export type IClientCardPaymentPopulated = Omit<
+  IClientCardPayment,
+  "clientPayment"
+> & { clientPayment: IClientPayment };
 
 export const ClientPaymentSchema = SchemaFactory.createForClass(ClientPayment);
 export const ClientCardPaymentSchema =

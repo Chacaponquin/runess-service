@@ -1,36 +1,44 @@
 import { PaymentService } from "@modules/payment/services/payment-service";
-import { CreateOrderDTO, OrderItemDTO } from "../dto/order";
-import { OrderService } from "../services/order-service";
+import { CreateOrderDTO, OrderItemDTO, RespCreateOrderDTO } from "../dto/order";
 import { ClientServices } from "@modules/client/services/client.service";
 import { ProductServices } from "@modules/product/services/product/product.services";
 import { OrderMissingProductException } from "../exceptions";
+import { OrderRepository } from "../services/order-repository";
 
 export class CreateOrder {
   constructor(
-    private readonly orderServices: OrderService,
     private readonly paymentServices: PaymentService,
     private readonly clientServices: ClientServices,
     private readonly productServices: ProductServices,
+    private readonly orderRepository: OrderRepository,
   ) {}
 
-  async execute(dto: CreateOrderDTO): Promise<string> {
-    const client = await this.clientServices.createClient(dto);
+  async execute(dto: CreateOrderDTO): Promise<RespCreateOrderDTO> {
+    const client = await this.clientServices.createClient({
+      email: dto.email,
+      firstName: dto.firstName,
+      lastName: dto.lastName,
+      phone: dto.phone,
+      userId: dto.userId,
+    });
 
-    const amout = await this._calculateAmount(dto.orders);
-    const cardPayment = await this.paymentServices.createClientCardPayment({
-      amount: amout,
+    const amount = await this.calculateAmount(dto.orders);
+    const clientSecret = await this.paymentServices.createPaymentSession({
+      amount: amount,
+    });
+
+    const payment = await this.paymentServices.createPayment({
+      amount: amount,
       clientId: client.id,
+      paymentType: dto.type,
     });
 
-    await this.orderServices.createOrder({
-      orders: dto.orders,
-      clientPaymentId: cardPayment.id,
-    });
+    await this.orderRepository.create({ orders: dto.orders, note: dto.note });
 
-    return "";
+    return { clientSecret: clientSecret, paymentId: payment.id };
   }
 
-  private async _calculateAmount(orders: Array<OrderItemDTO>): Promise<number> {
+  private async calculateAmount(orders: OrderItemDTO[]): Promise<number> {
     let amount = 0;
 
     for (const order of orders) {

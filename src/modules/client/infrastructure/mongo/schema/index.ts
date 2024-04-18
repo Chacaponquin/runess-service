@@ -3,8 +3,6 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { DB_MOELS } from "@shared/constants";
 import mongoose, { Document } from "mongoose";
 
-export type IClient = Client & Document;
-
 @Schema()
 class Client {
   @Prop({ type: mongoose.SchemaTypes.String, required: true })
@@ -16,7 +14,7 @@ class Client {
   @Prop({ type: mongoose.SchemaTypes.String, required: true })
   email: string;
 
-  @Prop({ type: mongoose.SchemaTypes.String, required: true })
+  @Prop({ type: mongoose.SchemaTypes.String, required: false, default: "" })
   address: string;
 
   @Prop({
@@ -24,10 +22,13 @@ class Client {
     required: false,
     ref: DB_MOELS.USERS,
   })
-  user: IUser | null;
+  user: mongoose.Types.ObjectId | null;
 
   @Prop({ type: mongoose.SchemaTypes.String, required: true })
   phone: string;
 }
+
+export type IClient = Client & Document;
+export type IClientPopulated = Omit<IClient, "user"> & { user: IUser };
 
 export const ClientSchema = SchemaFactory.createForClass(Client);
