@@ -6,7 +6,7 @@ import {
   IsString,
   Min,
 } from "class-validator";
-import { PRODUCT_TYPES } from "../constants";
+import { FILTER_ORDER, PRODUCT_TYPES } from "../constants";
 
 export class GetDTO {
   @IsNotEmpty()
@@ -44,13 +44,13 @@ export class ProductFieldsDTO {
   @IsNotEmpty()
   @IsString({ each: true })
   @ArrayMinSize(1)
-  images: Array<string>;
+  images: string[];
 
   @IsArray()
   @IsNotEmpty()
   @IsString({ each: true })
   @ArrayMinSize(1)
-  categories: Array<string>;
+  categories: string[];
 }
 
 export class FilterProductDTO {
@@ -76,7 +76,7 @@ export class FilterProductDTO {
 
   @IsString()
   @IsNotEmpty()
-  order: string;
+  order: FILTER_ORDER;
 }
 
 export interface RespProductDTO {
