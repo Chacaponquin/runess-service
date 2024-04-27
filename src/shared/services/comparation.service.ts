@@ -4,6 +4,7 @@ import str from "string-comparison";
 @Injectable()
 export class ComparationService {
   compare(str1: string, str2: string): number {
-    return str.cosine.similarity(str1, str2);
+    const value = str.cosine.similarity(str1, str2);
+    return value;
   }
 }

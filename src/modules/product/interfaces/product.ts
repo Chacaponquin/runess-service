@@ -10,6 +10,7 @@ export interface CreateProductProps {
   images: Array<string>;
   categories: Array<string>;
   type: PRODUCT_TYPES;
+  description: string;
 }
 
 export type UpdateProductProps = Omit<CreateProductProps, "type"> & {

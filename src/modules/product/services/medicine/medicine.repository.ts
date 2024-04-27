@@ -8,7 +8,6 @@ import { MediaServices } from "@modules/media/services/media.service";
 import { PRODUCT_TYPES } from "../../constants";
 import { FilterMedicineProps } from "@modules/product/interfaces/medicine";
 import { FilterPage } from "@modules/product/domain/page";
-import { MedicineMatch } from "@modules/product/infrastructure/mongo/domain";
 import { GetProps, SearchResult } from "@modules/product/interfaces/product";
 import { GetPage } from "@shared/domain/page";
 import { ComparationService } from "@shared/services/comparation.service";
@@ -78,40 +77,45 @@ export class MedicineRepository {
     }
   }
 
-  async filter(props: FilterMedicineProps): Promise<SearchResult> {
-    const page = new FilterPage(props.page);
+  async filter({
+    maxPrice,
+    minPrice,
+    name,
+    page: ipage,
+    providers,
+  }: FilterMedicineProps): Promise<SearchResult> {
+    const page = new FilterPage(ipage);
 
-    const result = await this.model
-      .aggregate<IMedicine>([
-        {
-          $lookup: {
-            from: DB_MOELS.PRODUCTS,
-            localField: "product",
-            foreignField: "_id",
-            as: "product",
-          },
-        },
-        {
-          $unwind: "$product",
-        },
-        {
-          $match: new MedicineMatch(props).match,
-        },
-      ])
-      .exec();
+    const match = {
+      price: {
+        $lte: maxPrice,
+        $gte: minPrice,
+      },
+    } as Record<string, unknown>;
 
-    const all = result
+    if (providers.length > 0) {
+      match.provider = { $in: providers };
+    }
+
+    const result = await this.model.find().populate({
+      path: "product",
+      match: match,
+    });
+
+    const notNull = result.filter((r) => r.product !== null);
+
+    const all = notNull
       .slice(page.init, page.final)
       .map((c) => {
         return new SimilarProduct({
           product: c,
-          similarity: this.compareServices.compare(props.name, c.product.name),
+          similarity: this.compareServices.compare(name, c.product.name),
         });
       })
       .sort((a, b) => b.similarity - a.similarity)
       .map((c) => this.map(c.product));
 
-    return { result: all, totalPages: page.total(result.length) };
+    return { result: all, totalPages: page.total(notNull.length) };
   }
 
   async findById(id: string): Promise<Medicine | null> {
@@ -138,6 +142,7 @@ export class MedicineRepository {
       provider: medicine.product.provider,
       categories: medicine.product.categories,
       type: PRODUCT_TYPES.MEDICINE,
+      description: medicine.product.description,
     });
   }
 }

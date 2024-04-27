@@ -36,6 +36,10 @@ export class ProductFieldsDTO {
   @IsString()
   provider: string;
 
+  @IsString()
+  @IsNotEmpty()
+  description: string;
+
   @IsArray()
   @IsNotEmpty()
   @IsString({ each: true })
@@ -83,6 +87,7 @@ export interface RespProductDTO {
   categories: string[];
   type: PRODUCT_TYPES;
   provider: string;
+  description: string;
 }
 
 export interface RespProductImageDTO {

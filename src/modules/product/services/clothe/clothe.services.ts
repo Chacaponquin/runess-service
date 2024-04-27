@@ -82,6 +82,7 @@ export class ClotheServices implements OnModuleInit {
       provider: dto.provider,
       categories: dto.categories,
       type: PRODUCT_TYPES.CLOTHE,
+      description: dto.description,
     });
 
     try {
