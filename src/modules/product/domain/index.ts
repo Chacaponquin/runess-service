@@ -9,8 +9,9 @@ interface ProductProps {
   name: string;
   price: number;
   provider: string;
-  images: Array<ProductImage>;
-  categories: Array<string>;
+  images: ProductImage[];
+  categories: string[];
+  description: string;
   type: PRODUCT_TYPES;
 }
 
@@ -31,9 +32,10 @@ export class Product {
   readonly name: string;
   readonly price: number;
   readonly provider: string;
-  readonly images: Array<ProductImage>;
-  readonly categories: Array<string>;
+  readonly images: ProductImage[];
+  readonly categories: string[];
   readonly type: PRODUCT_TYPES;
+  readonly description: string;
 
   constructor({
     id,
@@ -43,6 +45,7 @@ export class Product {
     images,
     categories,
     type,
+    description,
   }: ProductProps) {
     this.id = id;
     this.name = name;
@@ -51,6 +54,7 @@ export class Product {
     this.images = images;
     this.categories = categories;
     this.type = type;
+    this.description = description;
   }
 
   response(): RespProductDTO {
@@ -66,6 +70,7 @@ export class Product {
       images: schema.generate(
         schemas.dataType.int().getValue({ min: 1, max: 10 }),
       ),
+      description: this.description,
       name: this.name,
       price: this.price,
       provider: this.provider,

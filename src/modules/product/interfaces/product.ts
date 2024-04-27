@@ -7,9 +7,10 @@ export interface CreateProductProps {
   provider: string;
   originalPrice: number;
   price: number;
-  images: Array<string>;
-  categories: Array<string>;
+  images: string[];
+  categories: string[];
   type: PRODUCT_TYPES;
+  description: string;
 }
 
 export type UpdateProductProps = Omit<CreateProductProps, "type"> & {

@@ -18,10 +18,10 @@ class Clothe {
   product: IProduct;
 
   @Prop({ required: true, type: mongoose.SchemaTypes.Array })
-  colors: Array<string>;
+  colors: string[];
 
   @Prop({ required: true, type: mongoose.SchemaTypes.Array })
-  sizes: Array<string>;
+  sizes: string[];
 }
 
 export type IClothe = Clothe & Document;

@@ -74,6 +74,7 @@ export class MedicineServices implements OnModuleInit {
       provider: dto.provider,
       categories: dto.categories,
       type: PRODUCT_TYPES.MEDICINE,
+      description: dto.description,
     });
 
     try {

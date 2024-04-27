@@ -5,14 +5,15 @@ import { DB_MOELS } from "@shared/constants";
 import { InjectModel } from "@nestjs/mongoose";
 import { Medicine } from "../../domain";
 import { MediaServices } from "@modules/media/services/media.service";
-import { PRODUCT_TYPES } from "../../constants";
+import { FILTER_ORDER, PRODUCT_TYPES } from "../../constants";
 import { FilterMedicineProps } from "@modules/product/interfaces/medicine";
 import { FilterPage } from "@modules/product/domain/page";
-import { MedicineMatch } from "@modules/product/infrastructure/mongo/domain";
 import { GetProps, SearchResult } from "@modules/product/interfaces/product";
 import { GetPage } from "@shared/domain/page";
 import { ComparationService } from "@shared/services/comparation.service";
 import { SimilarProduct } from "@modules/product/domain/similar";
+import { MedicineMatch } from "@modules/product/infrastructure/mongo/domain/Match";
+import { MedicineSort } from "@modules/product/infrastructure/mongo/domain/Sort";
 
 @Injectable()
 export class MedicineRepository {
@@ -78,40 +79,62 @@ export class MedicineRepository {
     }
   }
 
-  async filter(props: FilterMedicineProps): Promise<SearchResult> {
-    const page = new FilterPage(props.page);
+  async filter({
+    maxPrice,
+    minPrice,
+    name,
+    page: ipage,
+    providers,
+    order,
+  }: FilterMedicineProps): Promise<SearchResult> {
+    const page = new FilterPage(ipage);
 
-    const result = await this.model
-      .aggregate<IMedicine>([
-        {
-          $lookup: {
-            from: DB_MOELS.PRODUCTS,
-            localField: "product",
-            foreignField: "_id",
-            as: "product",
-          },
-        },
-        {
-          $unwind: "$product",
-        },
-        {
-          $match: new MedicineMatch(props).match,
-        },
-      ])
-      .exec();
+    const match = new MedicineMatch({ maxPrice, minPrice, providers });
+    const sort = new MedicineSort(order);
 
-    const all = result
-      .slice(page.init, page.final)
-      .map((c) => {
-        return new SimilarProduct({
-          product: c,
-          similarity: this.compareServices.compare(props.name, c.product.name),
-        });
-      })
-      .sort((a, b) => b.similarity - a.similarity)
-      .map((c) => this.map(c.product));
+    const result = await this.model.aggregate([
+      {
+        $lookup: {
+          from: DB_MOELS.PRODUCTS,
+          localField: "product",
+          foreignField: "_id",
+          as: "product",
+        },
+      },
+      {
+        $unwind: {
+          path: "$product",
+          preserveNullAndEmptyArrays: false,
+        },
+      },
+      { $match: match.value },
+      {
+        $sort: sort.value,
+      },
+    ]);
 
-    return { result: all, totalPages: page.total(result.length) };
+    const all = result.slice(page.init, page.final);
+    if (order === FILTER_ORDER.NAME) {
+      const products = all
+        .map((c) => {
+          return new SimilarProduct({
+            product: c,
+            similarity: this.compareServices.compare(name, c.product.name),
+          });
+        })
+        .sort((b, a) => b.similarity - a.similarity)
+        .map((c) => this.map(c.product));
+
+      return {
+        result: products,
+        totalPages: page.total(result.length),
+      };
+    } else {
+      return {
+        result: all.map((c) => this.map(c)),
+        totalPages: page.total(result.length),
+      };
+    }
   }
 
   async findById(id: string): Promise<Medicine | null> {
@@ -138,6 +161,7 @@ export class MedicineRepository {
       provider: medicine.product.provider,
       categories: medicine.product.categories,
       type: PRODUCT_TYPES.MEDICINE,
+      description: medicine.product.description,
     });
   }
 }

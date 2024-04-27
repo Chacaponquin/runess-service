@@ -10,13 +10,14 @@ import {
   UpdateClotheProps,
 } from "../../interfaces/clothe";
 import { MediaServices } from "@modules/media/services/media.service";
-import { PRODUCT_TYPES } from "../../constants";
-import { ClotheMatch } from "@modules/product/infrastructure/mongo/domain";
+import { FILTER_ORDER, PRODUCT_TYPES } from "../../constants";
 import { FilterPage } from "@modules/product/domain/page";
 import { GetProps, SearchResult } from "@modules/product/interfaces/product";
 import { GetPage } from "@shared/domain/page";
 import { ComparationService } from "@shared/services/comparation.service";
 import { SimilarProduct } from "@modules/product/domain/similar";
+import { ClotheMatch } from "@modules/product/infrastructure/mongo/domain/Match";
+import { ClotheSort } from "@modules/product/infrastructure/mongo/domain/Sort";
 
 @Injectable()
 export class ClotheRepository {
@@ -60,40 +61,67 @@ export class ClotheRepository {
     return all;
   }
 
-  async filter(props: FilterClotheProps): Promise<SearchResult> {
-    const page = new FilterPage(props.page);
+  async filter({
+    providers,
+    name,
+    colors,
+    maxPrice,
+    minPrice,
+    page: ipage,
+    sizes,
+    order,
+  }: FilterClotheProps): Promise<SearchResult> {
+    const page = new FilterPage(ipage);
 
-    const result = await this.model
-      .aggregate<IClothe>([
-        {
-          $lookup: {
-            from: DB_MOELS.PRODUCTS,
-            localField: "product",
-            foreignField: "_id",
-            as: "product",
-          },
-        },
-        {
-          $unwind: "$product",
-        },
-        {
-          $match: new ClotheMatch(props).match,
-        },
-      ])
-      .exec();
+    const match = new ClotheMatch({
+      colors,
+      maxPrice,
+      minPrice,
+      providers,
+      sizes,
+    });
+    const sort = new ClotheSort(order);
 
-    const products = result
-      .slice(page.init, page.final)
-      .map((c) => {
-        return new SimilarProduct({
-          product: c,
-          similarity: this.compareServices.compare(props.name, c.product.name),
-        });
-      })
-      .sort((a, b) => b.similarity - a.similarity)
-      .map((c) => this.map(c.product));
+    const result = await this.model.aggregate([
+      {
+        $lookup: {
+          from: DB_MOELS.PRODUCTS,
+          localField: "product",
+          foreignField: "_id",
+          as: "product",
+        },
+      },
+      {
+        $unwind: {
+          path: "$product",
+          preserveNullAndEmptyArrays: false,
+        },
+      },
+      { $match: match.value },
+      {
+        $sort: sort.value,
+      },
+    ]);
 
-    return { result: products, totalPages: page.total(result.length) };
+    const all = result.slice(page.init, page.final);
+    if (order === FILTER_ORDER.NAME) {
+      const products = all
+        .map((c) => {
+          return new SimilarProduct({
+            product: c,
+            similarity: this.compareServices.compare(name, c.product.name),
+          });
+        })
+        .sort((b, a) => b.similarity - a.similarity)
+        .map((c) => this.map(c.product));
+
+      return {
+        result: products,
+        totalPages: page.total(result.length),
+      };
+    } else {
+      return { result: all, totalPages: page.total(result.length) };
+    }
   }
 
   async update(props: UpdateClotheProps): Promise<Clothe | null> {
@@ -175,6 +203,7 @@ export class ClotheRepository {
       type: PRODUCT_TYPES.CLOTHE,
       colors: clothe.colors,
       sizes: clothe.sizes,
+      description: clothe.product.description,
     });
   }
 }

@@ -94,6 +94,7 @@ export class ProductRepository {
       categories: props.categories,
       images: props.images,
       type: props.type,
+      description: props.description,
     });
 
     await newProduct.save();
@@ -131,6 +132,7 @@ export class ProductRepository {
       provider: product.provider,
       categories: product.categories,
       type: product.type,
+      description: product.description,
     });
   }
 }
