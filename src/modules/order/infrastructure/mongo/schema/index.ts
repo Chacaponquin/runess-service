@@ -24,6 +24,9 @@ class Order {
 
   @Prop({ type: mongoose.SchemaTypes.String, default: "", required: false })
   note: string;
+
+  @Prop({ type: mongoose.SchemaTypes.Number, required: true })
+  no: number;
 }
 
 export type IOrder = Order & Document;
