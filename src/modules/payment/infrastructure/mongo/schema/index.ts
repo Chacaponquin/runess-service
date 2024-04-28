@@ -14,8 +14,14 @@ class ClientPayment {
   @Prop({ ref: DB_MOELS.CLIENT, type: mongoose.Types.ObjectId, required: true })
   client: mongoose.Types.ObjectId;
 
-  @Prop({ type: mongoose.SchemaTypes.Number, required: true })
+  @Prop({ type: mongoose.SchemaTypes.Number, required: true, min: 0 })
   amount: number;
+
+  @Prop({ type: mongoose.SchemaTypes.Number, required: true, min: 0 })
+  shipping: number;
+
+  @Prop({ type: mongoose.SchemaTypes.Number, required: true, min: 0 })
+  discount: number;
 
   @Prop({ default: false, type: mongoose.SchemaTypes.Boolean, required: false })
   completed: boolean;
